@@ -143,8 +143,20 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.ok([firstCard,secondCard,thirdCard].every(card=>card.disabled));
  assert.equal(secondCard.querySelector('.supply-reward').textContent,'골드 +14');
  assert.equal(supplyNote,'골드 +14');assert.equal(growth.xp,23);
- assert.equal(coins,47);assert.equal(loadCheckpoint().pendingSupplies,null);
+ assert.equal(coins,47);
+ const claimed=loadCheckpoint();
+ assert.equal(claimed.pendingSupplies,null);assert.equal(claimed.supplyReview,1);
+ $('supplyDialog').close();
+ restoreCheckpoint(claimed);
+ assert.equal($('supplyDialog').open,true);
+ const restoredCards=$('supplyChoices').children;
+ assert.ok(restoredCards.every(card=>card.disabled));
+ assert.equal(restoredCards[1].querySelector('.supply-reward').textContent,'골드 +14');
+ assert.equal($('supplyContinue').hidden,false);
+ restoredCards[0].onclick();
+ assert.equal(coins,47);assert.equal(growth.xp,23);
  $('supplyContinue').onclick();
+ assert.equal(loadCheckpoint().supplyReview,null);
  assert.equal($('supplyDialog').open,false);assert.equal($('panel').dataset.screen,'shop');
  nextShop(()=>.98);assert.equal(coins,47);assert.equal(growth.xp,23);
  addXP(7);assert.equal(growth.level,2);assert.equal(growth.points,1);
@@ -272,6 +284,26 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  wave++;pendingSupplies=[.1,.1,.95];claimSupply(2);assert.equal(inventoryItems.barrier,1);
  wave++;pendingSupplies=[.6,.1,.1];claimSupply(0);
  assert.equal(supplyNote,'보급 교환 · 골드 +9');
+ // A refresh on the stage-clear screen resumes there, then saves the shop separately.
+ for(const stage of [5,10]){
+   reset();
+   wave=stage;
+   nextShop(()=>.95);
+   $('supplyChoices').children[2].onclick();
+   assert.equal(inventoryItems.barrier,1);
+   $('supplyContinue').onclick();
+   const stageCheckpoint=loadCheckpoint();
+   assert.equal(stageCheckpoint.supplyReview,'stage-clear');
+   restoreCheckpoint(stageCheckpoint);
+   assert.equal($('supplyDialog').open,false);
+   assert.match($('title').textContent,stage===5?/스테이지 1 클리어/:/야간 스테이지 클리어/);
+   assert.equal(inventoryItems.barrier,1);
+   $('choices').children[0].onclick();
+   const shopCheckpoint=loadCheckpoint();
+   assert.equal(shopCheckpoint.supplyReview,null);
+   restoreCheckpoint(shopCheckpoint);
+   assert.equal($('panel').dataset.screen,'shop');
+ }
  console.log('PASS',innerWidth+'x'+innerHeight,'camera, multitouch, combat, shop, purchases, items, checkpoint, bosses');
  `,context);
 }
