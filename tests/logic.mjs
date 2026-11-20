@@ -32,9 +32,15 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(illustratedStreet.material.map.image,streetArt);
  assert.ok(centerMarkings.every(mesh=>!mesh.visible));
  assert.ok(plainSidewalks.every(mesh=>!mesh.visible));
+ assert.ok(femaleGroundRing.position.y>illustratedStreet.position.y);
+ assert.equal(brickWall.map,null);
+ facadeArt.onload();
+ assert.equal(brickWall.map.image,facadeArt);
  reset(); assert.equal(playing,true);assert.equal(wave,1);assert.equal(hp,100);
  makeEnemy(); assert.equal(enemies.length,1);
  const victim=enemies[0];
+ const victimShadow=victim.userData.contactShadow;
+ assert.equal(victimShadow.parent,scene);
  const animatedArm=victim.userData.gait[0].joint;
  const fabric=animatedArm.children[0].material;
  updateEnemyAction(victim,.2);
@@ -44,7 +50,7 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.notEqual(animatedArm.rotation.x,pose);
  flashHit(victim);assert.equal(animatedArm.children[0].material,hitFlashMaterial);
  updateHitFlash(victim,.2);assert.equal(animatedArm.children[0].material,fabric);
- damageEnemy(victim,999,victim.position);assert.equal(kills,1);assert.equal(coins,8);
+ damageEnemy(victim,999,victim.position);assert.equal(kills,1);assert.equal(coins,8);assert.equal(victimShadow.parent,null);
  assert.equal($('damage').textContent,999);
  assert.equal(hitNumberTime,.42);
  updateHitNumber(.5);

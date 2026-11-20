@@ -51,6 +51,10 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
 @media(max-width:480px){.pill{font-size:12px;padding:7px}#top{gap:4px}#health{width:90px}#playerStat{font-size:11px}#loadout{padding:6px}#weaponStats{font-size:12px}#bossHud{top:98px}}
 @media(max-height:500px){#top{padding:6px}.pill{font-size:12px;padding:5px 9px}#loadout{left:auto;right:8px;transform:none;bottom:22px}#bossHud{top:6px;width:32vw}#card{max-height:calc(100dvh - 16px);padding:14px}#description{margin-bottom:5px}#card button{margin-top:6px}}
 
+#hud::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 51% 50%,transparent 53%,#090b1740 100%);
+}
 /* In-game chrome follows the contrast and proportions of the art reference. */
 #top{
   display:grid;grid-template-columns:auto auto 1fr auto;align-items:start;
@@ -129,7 +133,7 @@ try {
   $('error').textContent='이 브라우저에서 3D 그래픽을 시작하지 못했어요. WebGL을 지원하는 브라우저에서 열어 주세요.';
   $('error').style.display='block';
   throw error;
-}renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.prepend(renderer.domElement);scene.add(new THREE.HemisphereLight(0xffffff,0x65736b,2.0));const sun=new THREE.DirectionalLight(0xfff0d6,2.5);sun.position.set(-9,18,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-22;sun.shadow.camera.right=22;sun.shadow.camera.top=32;sun.shadow.camera.bottom=-30;scene.add(sun);
+}renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.prepend(renderer.domElement);scene.add(new THREE.HemisphereLight(0xb9c8e6,0x73635b,1.42));const sun=new THREE.DirectionalLight(0xfff0d6,2.5);sun.position.set(-9,18,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-22;sun.shadow.camera.right=22;sun.shadow.camera.top=32;sun.shadow.camera.bottom=-30;scene.add(sun);
 const mat=(color,other={})=>new THREE.MeshStandardMaterial({color,roughness:.82,...other});const road=mat(0x707b86),stripe=mat(0xe5e1ce),grass=mat(0x678e68),wall=mat(0x657a83),skin=mat(0xe6b18b),blue=mat(0x255b87),dark=mat(0x27343d),red=mat(0xa3484b),gold=mat(0xffc05b,{emissive:0xa45412,emissiveIntensity:.3});function box(w,h,d,m,x,y,z,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}function sphere(r,m,x,y,z,parent=scene){const o=new THREE.Mesh(new THREE.SphereGeometry(r,12,9),m);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o}box(55,.15,115,grass,0,-.16,-28);box(13,.08,105,road,0,0,-28);const centerMarkings=[];for(let z=4;z>-80;z-=8){centerMarkings.push(box(.13,.025,3.2,stripe,0,.06,z));box(.2,.2,7,wall,-6.65,.08,z-2);box(.2,.2,7,wall,6.65,.08,z-2)}for(let z=-3;z>-82;z-=10){for(let side of [-1,1]){const x=side*(9+Math.random()*5);box(.45,1.8,.45,mat(0x6b5342),x,.9,z);sphere(1.3,mat(0x3d7453),x,2.25,z);sphere(.9,mat(0x518760),x+.7,2.5,z-.3)}}box(13,.4,.8,mat(0x3b4b55),0,.3,5.4);for(let x=-6;x<=6;x+=1.6)box(.12,.9,.5,mat(0xf3bf52),x,.85,5.4);
 const wetHighlights=new THREE.Group();
 wetHighlights.visible=false;
@@ -153,7 +157,33 @@ for(const z of [-4,-17,-30,-43]){
   scene.add(lamp);
   streetLamps.push(lamp);
 }
-const player=new THREE.Group();scene.add(player);player.position.set(0,0,3);sphere(.46,skin,0,2.45,0,player);const jacket=box(.92,1.05,.55,blue,0,1.56,0,player);box(.38,.95,.38,dark,-.26,.62,0,player);box(.38,.95,.38,dark,.26,.62,0,player);box(.4,.7,.35,blue,-.7,1.65,-.05,player);box(.4,.7,.35,blue,.7,1.65,-.05,player);box(.48,.6,.3,mat(0x3c493c),0,1.7,.37,player);const alternateJacket=mat(0x47786b);
+// Shared soft contact shadows keep actor silhouettes attached to the pavement.
+const shadowSize=32;
+const shadowPixels=new Uint8Array(shadowSize*shadowSize*4);
+for(let row=0;row<shadowSize;row++){
+  for(let col=0;col<shadowSize;col++){
+    const radius=Math.hypot((col+.5)/shadowSize*2-1,(row+.5)/shadowSize*2-1);
+    shadowPixels[(row*shadowSize+col)*4+3]=Math.round(125*Math.max(0,1-radius)**1.6);
+  }
+}
+const contactTexture=new THREE.DataTexture(shadowPixels,shadowSize,shadowSize);
+contactTexture.minFilter=contactTexture.magFilter=THREE.LinearFilter;
+contactTexture.needsUpdate=true;
+const contactMaterial=new THREE.MeshBasicMaterial({map:contactTexture,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1});
+const contactGeometry=new THREE.PlaneGeometry(1,1);
+function addContactShadow(actor,width,depth){
+  const shadow=new THREE.Mesh(contactGeometry,contactMaterial);
+  shadow.rotation.x=-Math.PI/2;
+  shadow.scale.set(width,depth,1);
+  actor.userData.contactShadow=shadow;
+  positionContactShadow(actor);
+  scene.add(shadow);
+}
+function positionContactShadow(actor){
+  const shadow=actor.userData.contactShadow;
+  if(shadow)shadow.position.set(actor.position.x,.063,actor.position.z);
+}
+const player=new THREE.Group();scene.add(player);player.position.set(0,0,3);addContactShadow(player,2.28,1.65);sphere(.46,skin,0,2.45,0,player);const jacket=box(.92,1.05,.55,blue,0,1.56,0,player);box(.38,.95,.38,dark,-.26,.62,0,player);box(.38,.95,.38,dark,.26,.62,0,player);box(.4,.7,.35,blue,-.7,1.65,-.05,player);box(.4,.7,.35,blue,.7,1.65,-.05,player);box(.48,.6,.3,mat(0x3c493c),0,1.7,.37,player);const alternateJacket=mat(0x47786b);
 const hair=mat(0x3c2a28);
 const ponytail=sphere(.21,hair,0,2.32,.43,player);
 ponytail.scale.y=1.6;
@@ -237,14 +267,14 @@ const femaleGroundGlow=new THREE.Mesh(
   new THREE.MeshBasicMaterial({color:0x75c69c,transparent:true,opacity:.16,depthWrite:false,side:THREE.DoubleSide})
 );
 femaleGroundGlow.rotation.x=-Math.PI/2;
-femaleGroundGlow.position.y=.035;
+femaleGroundGlow.position.y=.075;
 femaleArtGroup.add(femaleGroundGlow);
 const femaleGroundRing=new THREE.Mesh(
   new THREE.RingGeometry(.65,.69,40),
   new THREE.MeshBasicMaterial({color:0x91e6ac,transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide})
 );
 femaleGroundRing.rotation.x=-Math.PI/2;
-femaleGroundRing.position.y=.04;
+femaleGroundRing.position.y=.080;
 femaleArtGroup.add(femaleGroundRing);
 const femaleRimLight=new THREE.PointLight(0xa6cfff,.7,4.8,2);
 femaleRimLight.position.set(-.75,2.35,.85);
@@ -493,7 +523,7 @@ if(big){
   e.userData.core=core;
 }
 e.scale.setScalar(chief?2.68:big?2.145:1);const health=enemyHealth(big?(chief?480:bossRole?290:180+wave*22):(role==='baby'?27:role==='carpenter'?55:40)+wave*10);
-e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};e.userData.label=textSprite(e.userData.hp);e.userData.label.position.set(0,e.userData.labelHeight??(big?4.7:3.15*body),0);e.add(e.userData.label);scene.add(e);enemies.push(e);if(big)updateBossHud()}const animalStats={
+e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};e.userData.label=textSprite(e.userData.hp);e.userData.label.position.set(0,e.userData.labelHeight??(big?4.7:3.15*body),0);e.add(e.userData.label);scene.add(e);addContactShadow(e,body*e.scale.x*1.85,body*e.scale.x*1.2);enemies.push(e);if(big)updateBossHud()}const animalStats={
   dog:{size:.84,hp:24,speed:4.6,color:0xa66d56,attack:10},
   bear:{size:2.145,hp:90,speed:1.65,color:0x655047,attack:16},
   tiger:{size:1.05,hp:48,speed:3.5,color:0xd89145,attack:12}
@@ -551,6 +581,7 @@ function makeAnimal(enemy,kind){
   enemy.userData.label.position.y=enemy.userData.labelHeight;
   enemy.add(enemy.userData.label);
   scene.add(enemy);
+  addContactShadow(enemy,2*size,3*size);
   enemies.push(enemy);
 }
 const hurtTimers=new Map();
@@ -594,7 +625,7 @@ function updateLabel(e){e.remove(e.userData.label);e.userData.label.material.map
     $('bossStatus').textContent='⚠ 거대 좀비 접근 중!';
   }
 }
-function removeEnemy(e){scene.remove(e);const i=enemies.indexOf(e);if(i>=0)enemies.splice(i,1);if(e.userData.big)updateBossHud()}let lastHitSound=-Infinity;
+function removeEnemy(e){scene.remove(e);if(e.userData.contactShadow)scene.remove(e.userData.contactShadow);const i=enemies.indexOf(e);if(i>=0)enemies.splice(i,1);if(e.userData.big)updateBossHud()}let lastHitSound=-Infinity;
 const hitNumberPosition=new THREE.Vector3();
 const hitNumberScreen=new THREE.Vector3();
 let hitNumberTime=0;
@@ -1206,7 +1237,7 @@ if(muzzleFlash.visible){
   const strength=muzzleTime/.075;
   muzzleFlash.scale.set(.08+.16*strength,.08+.16*strength,.19+.29*strength);
 }
-updateDesignPilot();updateFemaleArtPass();updateHitNumber(dt);renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
+positionContactShadow(player);for(const enemy of enemies)positionContactShadow(enemy);updateDesignPilot();updateFemaleArtPass();updateHitNumber(dt);renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
 const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
   if(bossTest)return;
@@ -1297,20 +1328,29 @@ function restoreCheckpoint(checkpoint){
 const designPilot = new THREE.Group();
 scene.add(designPilot);
 const pilotMat=(c,metal=0)=>new THREE.MeshStandardMaterial({color:c,roughness:.78,metalness:metal,flatShading:true});
-const pilotAsphalt=pilotMat(0x243d46), pilotEdge=pilotMat(0x60767a), pilotYellow=pilotMat(0xe6b45b), pilotRust=pilotMat(0x9b5847), pilotConcrete=pilotMat(0x6c8585), pilotWindow=new THREE.MeshStandardMaterial({color:0xffd28b,emissive:0xe3a64b,emissiveIntensity:.5});
+const brickWall=pilotMat(0x79645c);
+const pilotEdge=pilotMat(0x60767a), pilotYellow=pilotMat(0xe6b45b), pilotRust=pilotMat(0x9b5847), pilotConcrete=pilotMat(0x6c8585), pilotWindow=new THREE.MeshStandardMaterial({color:0xffd28b,emissive:0xe3a64b,emissiveIntensity:.5});
 function pilotBlock(w,h,d,m,x,y,z,parent=designPilot){
   const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
   mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
 }
+const windowGlass=pilotMat(0x263743,.18);
 for(let z=4;z>-70;z-=12){
   for(const side of [-1,1]){
     const x=side*11.3;
     const height=5+(Math.abs(z)%3)*1.6;
-    pilotBlock(5.8,height,8.6,pilotConcrete,x,height/2-.05,z-3.1);
+    pilotBlock(5.8,height,8.6,brickWall,x,height/2-.05,z-3.1);
     pilotBlock(6.1,.38,9,pilotEdge,x,height+.05,z-3.1);
-    for(let level=1;level<height-1;level+=1.5){
+    const facadeX=x-side*2.99;
+    pilotBlock(.24,.32,8.75,pilotEdge,facadeX,.62,z-3.1);
+    pilotBlock(.24,.22,8.75,pilotEdge,facadeX,height-.56,z-3.1);
+    pilotBlock(.19,2.18,1.42,pilotRust,facadeX,1.16,z-.72);
+    for(let level=2.52;level<height-1;level+=1.5){
       for(let offset of [-2,0,2]){
-        pilotBlock(.12,.68,.9,pilotWindow,x-side*3.02,level,z-3.1+offset);
+        const frame=pilotBlock(.22,.93,1.12,pilotEdge,x-side*3.06,level,z-3.1+offset);
+        frame.castShadow=false;
+        const glass=pilotBlock(.10,.70,.87,(offset===0&&level<3&&side<0)?pilotWindow:windowGlass,x-side*3.22,level,z-3.1+offset);
+        glass.castShadow=false;
       }
     }
     pilotBlock(1.1,1.1,1.2,pilotRust,side*7.65,.55,z+1);
@@ -1380,6 +1420,20 @@ for(const [x,z,height] of [[-7.55,3,1],[-8.7,2.4,1.45],[-8.2,4.4,.65],[7.85,-6,.
     pilotBlock(.12,height+.03,1.13,crateTrim,x+offset,height/2,z);
   }
 }
+const facadeArt=document.createElement('img');
+facadeArt.onload=()=>{
+  const texture=new THREE.Texture(facadeArt);
+  texture.colorSpace=THREE.SRGBColorSpace;
+  texture.wrapS=texture.wrapT=THREE.MirroredRepeatWrapping;
+  texture.repeat.set(2,2);
+  texture.anisotropy=4;
+  texture.needsUpdate=true;
+  brickWall.color.setHex(0xb6a9a0);
+  brickWall.map=texture;
+  brickWall.needsUpdate=true;
+};
+facadeArt.src='./assets/weathered-brick.webp';
+
 const streetArt=document.createElement('img');
 streetArt.onload=()=>{
   const artTexture=new THREE.Texture(streetArt);
@@ -1402,6 +1456,15 @@ designPilot.add(drain);
 for(let i=-3;i<=3;i++){
   pilotBlock(.04,.014,.72-Math.abs(i)*.09,pilotEdge,2.4+i*.11,.08,-9).castShadow=false;
 }
+// Red emergency beacons mark the sides of the roadway outside the movement range.
+const beaconCase=pilotMat(0x352b29,.18);
+const beaconGlow=new THREE.MeshStandardMaterial({color:0xff8750,emissive:0xff541d,emissiveIntensity:1.8});
+for(const [x,z] of [[-7.15,1.4],[7.16,-12],[-7.15,-23]]){
+  pilotBlock(.18,1.12,.18,beaconCase,x,.56,z);
+  const lamp=pilotBlock(.26,.15,.25,beaconGlow,x,1.18,z);
+  lamp.castShadow=false;
+}
 const campLight=new THREE.PointLight(0xffb75e,15,17,2);campLight.position.set(-5,4,4);scene.add(campLight);
+sun.shadow.normalBias=.025;
 
 updateHUD();loop();</script></body></html>

@@ -48,3 +48,9 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Added mobile-sized WebP art for the street surface and the female survivor portrait. The pavement art is projected onto the 3D ground and receives scene shadows. If the art fails to load, the previous geometry and material remain visible.
 - Updated the live HUD with a portrait next to base and survivor health, grouped wave and kill counters, gold, and gold-edged active weapon slots. Damage numbers project from the hit location.
 - Four emulated viewport logic checks passed, including portrait selection, pavement art activation, and damage-number expiry. Existing character rigs remain in use. On-device visual comparison and frame-rate measurement are pending.
+
+## Street depth and actor lighting
+
+- Added illustrated brick textures, inset window panes, facade trim, and street-edge emergency beacons. Cool ambient light and warm direct light give the level more depth.
+- Added soft ground contact shadows to the survivor and enemies. Raised the survivor marker just above the illustrated street to prevent it from disappearing below the ground layer.
+- The four viewport logic checks cover the texture fallback and activation, ground-marker layering, and actor shadow cleanup. The Android GPU appearance and frame rate still require on-device review.
