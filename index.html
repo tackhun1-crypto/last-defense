@@ -933,7 +933,7 @@ swap=THREE.MathUtils.damp(swap,0,14,dt);
 deploy=THREE.MathUtils.damp(deploy,0,8,dt);
 brace=THREE.MathUtils.damp(brace,0,7,dt);
 if(!femaleGlb?.visible){gun.position.copy(gripOrigin);gun.rotation.set(0,0,0);}
-renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
+updateDesignPilot();renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
 const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
   if(bossTest)return;
@@ -1019,4 +1019,44 @@ function restoreCheckpoint(checkpoint){
     equipWeapon(checkpoint.weaponIndex);
     showShop();
 }
+
+/* 2.5D art-direction pilot: wave 1 only. Non-destructive visual layer. */
+const designPilot = new THREE.Group();
+scene.add(designPilot);
+const pilotMat=(c,metal=0)=>new THREE.MeshStandardMaterial({color:c,roughness:.78,metalness:metal,flatShading:true});
+const pilotAsphalt=pilotMat(0x243d46), pilotEdge=pilotMat(0x60767a), pilotYellow=pilotMat(0xe6b45b), pilotRust=pilotMat(0x9b5847), pilotConcrete=pilotMat(0x6c8585), pilotWindow=new THREE.MeshStandardMaterial({color:0xffd28b,emissive:0xe3a64b,emissiveIntensity:.5});
+function pilotBlock(w,h,d,m,x,y,z,parent=designPilot){
+  const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
+  mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
+}
+for(let z=4;z>-70;z-=12){
+  for(const side of [-1,1]){
+    const x=side*11.3;
+    const height=5+(Math.abs(z)%3)*1.6;
+    pilotBlock(5.8,height,8.6,pilotConcrete,x,height/2-.05,z-3.1);
+    pilotBlock(6.1,.38,9,pilotEdge,x,height+.05,z-3.1);
+    for(let level=1;level<height-1;level+=1.5){
+      for(let offset of [-2,0,2]){
+        pilotBlock(.12,.68,.9,pilotWindow,x-side*3.02,level,z-3.1+offset);
+      }
+    }
+    pilotBlock(1.1,1.1,1.2,pilotRust,side*7.65,.55,z+1);
+  }
+  pilotBlock(.15,.018,3.2,pilotYellow,-4.9,.095,z);
+  pilotBlock(.15,.018,3.2,pilotYellow,4.9,.095,z);
+}
+for(const z of [-7,-24,-41]){
+  pilotBlock(1.6,.22,.8,pilotRust,-5.55,.35,z);
+  pilotBlock(.35,.9,.35,pilotEdge,5.7,.45,z+2);
+}
+const pilotFill=new THREE.DirectionalLight(0x8cc9e2,.8);
+pilotFill.position.set(7,8,-12);designPilot.add(pilotFill);
+function updateDesignPilot(){
+  const active=wave===1;
+  if(designPilot.visible!==active)designPilot.visible=active;
+  if(!active)return;
+  // Keep gameplay camera and collision unchanged during first visual trial.
+  pilotFill.intensity=playing?.8:.45;
+}
+
 updateHUD();loop();</script></body></html>
