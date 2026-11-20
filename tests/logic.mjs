@@ -8,7 +8,7 @@ class Element {
  constructor(){this.style={setProperty(){}};this.dataset={};this.children=[];this.classList={toggle(){},add(){},remove(){}};this.hidden=false;this.textContent='';}
  set innerHTML(value){this.children=[]} get innerHTML(){return ''} appendChild(item){this.children.push(item);return item}
  append(...items){this.children.push(...items)} prepend(...items){this.children.unshift(...items)}
- replaceChildren(...items){this.children=items} setAttribute(){} addEventListener(){} remove(){} querySelector(){return null} focus(){} showModal(){this.open=true} close(){this.open=false}
+ replaceChildren(...items){this.children=items} setAttribute(){} addEventListener(){} remove(){} querySelector(selector){return (this.matches??={})[selector]??=new Element()} focus(){} showModal(){this.open=true} close(){this.open=false}
  getContext(){return new Proxy({measureText(){return {width:100}},createLinearGradient(){return {addColorStop(){}}}}, {get:(o,k)=>o[k]??(()=>{})})}
  getBoundingClientRect(){return {left:0,top:0,width:390,height:844}}
 }
@@ -127,10 +127,26 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal($('damage').style.opacity,'0');
  assert.equal(growth.xp,3);
  assert.equal(spendGrowth('power'),false);
- nextShop(()=>.1);assert.equal(playing,false);assert.equal($('panel').dataset.screen,'shop');
+ const rolls=[.95,.1,.8];
+ nextShop(()=>rolls.shift());
+ assert.equal(playing,false);assert.equal($('supplyDialog').open,true);
+ assert.equal(coins,33);assert.equal(growth.xp,23);
+ assert.equal($('supplyChoices').children.length,3);
+ const pending=loadCheckpoint();
+ assert.deepEqual(pending.pendingSupplies,[.95,.1,.8]);
+ $('supplyDialog').close();
+ restoreCheckpoint(pending);
+ assert.equal($('supplyDialog').open,true);
+ nextShop(()=>.98);assert.equal(coins,33);
+ const [firstCard,secondCard,thirdCard]=$('supplyChoices').children;
+ secondCard.onclick();firstCard.onclick();thirdCard.onclick();
+ assert.ok([firstCard,secondCard,thirdCard].every(card=>card.disabled));
+ assert.equal(secondCard.querySelector('.supply-reward').textContent,'골드 +14');
  assert.equal(supplyNote,'골드 +14');assert.equal(growth.xp,23);
- const rewardedCoins=coins;
- nextShop(()=>.98);assert.equal(coins,rewardedCoins);assert.equal(growth.xp,23);
+ assert.equal(coins,47);assert.equal(loadCheckpoint().pendingSupplies,null);
+ $('supplyContinue').onclick();
+ assert.equal($('supplyDialog').open,false);assert.equal($('panel').dataset.screen,'shop');
+ nextShop(()=>.98);assert.equal(coins,47);assert.equal(growth.xp,23);
  addXP(7);assert.equal(growth.level,2);assert.equal(growth.points,1);
  const attackBefore=damage;
  openGrowth();assert.equal($('growthDialog').open,true);
@@ -250,10 +266,12 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
    assert.ok(Math.abs(point.x)<.95&&Math.abs(point.y)<.9,JSON.stringify(point));
  }
  // Exercise the remaining deterministic supply outcomes without affecting the run.
- wave++;playerHp=91;resolveSupplies(()=>.55);
+ wave++;playerHp=91;pendingSupplies=[.55,.1,.8];claimSupply(0);
  assert.equal(playerHp,100);assert.equal(supplyNote,'응급 키트 · 생존자 체력 +9');
- wave++;resolveSupplies(()=>.80);assert.equal(inventoryItems.mat,1);
- wave++;resolveSupplies(()=>.95);assert.equal(inventoryItems.barrier,1);
+ wave++;pendingSupplies=[.1,.8,.1];claimSupply(1);assert.equal(inventoryItems.mat,1);
+ wave++;pendingSupplies=[.1,.1,.95];claimSupply(2);assert.equal(inventoryItems.barrier,1);
+ wave++;pendingSupplies=[.6,.1,.1];claimSupply(0);
+ assert.equal(supplyNote,'보급 교환 · 골드 +9');
  console.log('PASS',innerWidth+'x'+innerHeight,'camera, multitouch, combat, shop, purchases, items, checkpoint, bosses');
  `,context);
 }

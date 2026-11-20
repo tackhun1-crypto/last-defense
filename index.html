@@ -179,6 +179,72 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
   background:radial-gradient(circle at 39% 32%,#bac9de 0 7%,transparent 9%),radial-gradient(circle at 63% 60%,#adbedb 0 11%,transparent 13%),radial-gradient(circle at 31% 62%,#c0cce3 0 9%,transparent 11%),radial-gradient(circle at 38% 30%,#f4f9ff,#c6d6f0 79%);
   box-shadow:0 0 24px #a7c7ff99;
 }
+#supplyDialog{
+  position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;
+  margin:0;padding:12px;border:0;background:transparent;color:#fff0d5;overflow:auto;
+  touch-action:pan-y;text-align:center;
+}
+#supplyDialog[open]{display:grid;place-items:safe center}
+#supplyDialog::backdrop{background:#0a101972;backdrop-filter:blur(4px)}
+#supplyContent{width:min(100%,530px)}
+#supplyTitle{
+  display:flex;align-items:center;justify-content:center;gap:.5em;margin:0;
+  color:#fff3dd;font-size:clamp(26px,7vw,52px);font-weight:950;letter-spacing:-.055em;
+  text-shadow:0 3px 12px #000c;
+}
+#supplyTitle::before,#supplyTitle::after{
+  content:'';width:1.1em;height:1px;background:linear-gradient(90deg,transparent,#dfbf79);
+}
+#supplyTitle::after{rotate:180deg}
+#supplyHint{margin:.3em 0 1.65em;color:#e1dbd1;font-weight:750;text-shadow:0 2px 7px #000}
+#supplyChoices{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,2.5vw,18px);
+  width:min(100%,72dvh);margin:auto;
+}
+#supplyChoices .supply-card{
+  position:relative;isolation:isolate;aspect-ratio:.58;padding:0;margin:0;width:100%;
+  background:transparent;border-radius:8%;color:#fff3d9;perspective:900px;
+  transition:opacity .24s,filter .24s;
+}
+#supplyChoices .supply-card:disabled{opacity:.48;filter:brightness(.72) blur(.55px)}
+.supply-card:disabled[aria-pressed=true]{opacity:1;filter:none}
+.supply-card:focus-visible,#supplyContinue:focus-visible{outline:2px solid #ffe5a6;outline-offset:4px}
+.supply-turn{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  transition:transform .62s cubic-bezier(.22,.62,.23,1);
+}
+.supply-card[aria-pressed=true] .supply-turn{transform:rotateY(180deg)}
+.supply-face{position:absolute;inset:0;background-size:100% 100%;backface-visibility:hidden}
+.supply-back{background-image:url("assets/supply-back.webp")}
+.supply-front{
+  transform:rotateY(180deg);background-image:url("assets/supply-gold.webp");
+  filter:drop-shadow(0 0 8px #e89b3b88);
+}
+.supply-reward{
+  position:absolute;inset:auto 9% 6% 9%;height:12%;display:grid;place-items:center;
+  font-size:clamp(11px,2.8vw,25px);line-height:1;font-weight:900;
+  text-shadow:0 2px 4px #140c06;white-space:nowrap;
+}
+.supply-symbol{
+  position:absolute;inset:12% 8% 19%;display:grid;place-items:center;
+  background:radial-gradient(ellipse at 50% 65%,#876039,#302317 73%);
+  box-shadow:inset 0 0 14px #130c07;border-bottom:1px solid #ad8859;
+  font-size:clamp(30px,11vw,68px);text-shadow:0 5px 8px #110a06;
+}
+#supplyResult{height:2em;margin:1em 0 .12em;font-size:clamp(13px,3vw,18px);font-weight:800;color:#fff0ce;text-shadow:0 2px 8px #000}
+#supplyContinue{
+  width:auto;min-height:44px;margin:0;padding:8px 24px;border-radius:7px;
+  border:1px solid #bc924d;background:#181612e8;color:#fff1d3;font-size:14px;
+}
+#supplyContinue[hidden]{display:block;visibility:hidden;margin:auto}
+@media(max-height:500px){
+  #supplyTitle{font-size:26px}
+  #supplyHint{margin:.15em 0 .55em}
+  #supplyResult{margin:.4em 0 0;height:1.5em}
+  .supply-reward{font-size:clamp(10px,4dvh,17px)}
+  .supply-symbol{font-size:clamp(22px,13dvh,48px)}
+}
+@media(prefers-reduced-motion:reduce){.supply-card,.supply-turn{transition:none}}
 </style></head><body><div id="hud"><div id="coastSky" role="img" aria-label="지는 해" data-phase="sunset"></div><div id="top" aria-label="전투 현황">
   <div class="hud-brand" aria-hidden="true">LAST<strong>DEFENSE</strong></div>
   <div class="pill health-hud">
@@ -212,7 +278,15 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
   <button type="button" data-street="summer" aria-pressed="false">여름 낮</button>
   <button type="button" data-street="winter" aria-pressed="false">겨울 저녁</button>
 </div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="growthDialog" aria-labelledby="growthTitle"><strong id="growthTitle">생존자 성장</strong>
-<p id="growthBalance"></p><div id="growthOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
+<p id="growthBalance"></p><div id="growthOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="supplyDialog" aria-labelledby="supplyTitle" aria-describedby="supplyHint">
+  <div id="supplyContent">
+    <h2 id="supplyTitle" tabindex="-1" autofocus>행운 보급</h2>
+    <p id="supplyHint">카드 1장을 선택하세요</p>
+    <div id="supplyChoices"></div>
+    <p id="supplyResult" role="status"></p>
+    <button id="supplyContinue" type="button" hidden>계속하기 ▶</button>
+  </div>
+</dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
 try {
@@ -755,6 +829,7 @@ function freshGrowth(){
 }
 let growth=freshGrowth();
 let supplyWave=0,supplyNote='';
+let pendingSupplies=null;
 function xpGoal(){return 30+(growth.level-1)*10;}
 function addXP(amount){
   if(bossTest)return;
@@ -786,24 +861,72 @@ function openGrowth(){
   }));
   if(!dialog.open)dialog.showModal();
 }
-function resolveSupplies(roll=Math.random){
-  if(bossTest||supplyWave===wave)return;
+function claimSupply(index){
+  if(!pendingSupplies||!Number.isInteger(index)||index<0||index>=pendingSupplies.length)return;
+  const chance=pendingSupplies[index];
+  pendingSupplies=null;
   supplyWave=wave;
-  const chance=roll();
-  if(chance<.5){
-    coins+=14;supplyNote='골드 +14';
+  let reward;
+  if(chance<.5||chance<.75&&playerHp>=100){
+    const amount=chance<.5?14:9;
+    coins+=amount;
+    reward={label:`골드 +${amount}`};
+    supplyNote=amount===9?'보급 교환 · '+reward.label:reward.label;
   }else if(chance<.75){
-    if(playerHp>=100){
-      coins+=9;supplyNote='보급 교환 · 골드 +9';
-    }else{
-      const healed=Math.min(16,100-playerHp);
-      playerHp+=healed;supplyNote=`응급 키트 · 생존자 체력 +${healed}`;
-    }
+    const healed=Math.min(16,100-playerHp);
+    playerHp+=healed;
+    reward={label:`체력 +${healed}`,symbol:'➕'};
+    supplyNote=`응급 키트 · 생존자 ${reward.label}`;
   }else{
     const kind=chance<.9?'mat':'barrier';
     inventoryItems[kind]=(inventoryItems[kind]||0)+1;
-    supplyNote=kind==='mat'?'감속 매트 +1':'바리케이드 +1';
+    reward={label:`${obstacles[kind].name} +1`,symbol:kind==='mat'?'🟦':'🚧'};
+    supplyNote=reward.label;
   }
+  updateHUD();
+  renderItems();
+  saveCheckpoint();
+  return reward;
+}
+
+const supplyDialog=$('supplyDialog');
+supplyDialog.addEventListener('cancel',event=>event.preventDefault());
+$('supplyContinue').onclick=()=>{
+  supplyDialog.close();
+  finishIntermission();
+};
+function openSupplyCards(){
+  const status=$('supplyResult'),continueButton=$('supplyContinue');
+  status.textContent='';
+  continueButton.hidden=true;
+  const cards=pendingSupplies.map((_,index)=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='supply-card';
+    button.setAttribute('aria-label',`${index+1}번 보급 카드`);
+    button.setAttribute('aria-pressed','false');
+    button.innerHTML='<span class="supply-turn" aria-hidden="true"><span class="supply-face supply-back"></span><span class="supply-face supply-front"><span class="supply-reward"></span></span></span>';
+    button.onclick=()=>{
+      const reward=claimSupply(index);
+      if(!reward)return;
+      cards.forEach(card=>{card.disabled=true});
+      button.setAttribute('aria-pressed','true');
+      button.setAttribute('aria-label',reward.label);
+      button.querySelector('.supply-reward').textContent=reward.label;
+      if(reward.symbol){
+        const symbol=document.createElement('span');
+        symbol.className='supply-symbol';
+        symbol.textContent=reward.symbol;
+        button.querySelector('.supply-front').prepend(symbol);
+      }
+      status.textContent=`${reward.label} · 보급 적용 완료`;
+      continueButton.hidden=false;
+      continueButton.focus();
+    };
+    return button;
+  });
+  $('supplyChoices').replaceChildren(...cards);
+  supplyDialog.showModal();
 }
 function supplySummary(){
   return supplyWave===wave&&supplyNote?`<small id="rewardNote">행운 보급 · ${supplyNote}</small>`:'';
@@ -853,21 +976,27 @@ clearBarrier();renderItems();intermission=false;spawned=0;toSpawn=bossTest?1:wav
   return `<br><small>기지 피해 ${baseDamage} · 플레이어 피격 ${playerHits}회 · 바리케이드로 막은 적 ${blocked}마리 · 돌진 저지 ${charges}회</small>`;
 }
 function nextShop(roll=Math.random) {
-  clearRemains();
-  clearHostileShots();
+  playing=false;
+  dragPointer=null;
   intermission=true;
   if(bossTest){
+    clearRemains();
+    clearHostileShots();
     showPanel('보스 테스트 완료','상점으로 돌아가 다른 보스전을 테스트할 수 있어요.'+waveSummary(),bossTestOptions());
     return;
   }
-  if(supplyWave!==wave){
-    coins+=20+wave*5;
-    hp=Math.min(100,hp+growth.repair*6);
-    addXP(18+wave*2);
-    resolveSupplies(roll);
-  }
+  if(pendingSupplies||supplyWave===wave)return;
+  coins+=20+wave*5;
+  hp=Math.min(100,hp+growth.repair*6);
+  addXP(18+wave*2);
+  pendingSupplies=Array.from({length:3},()=>roll());
   updateHUD();
   saveCheckpoint();
+  openSupplyCards();
+}
+function finishIntermission(){
+  clearRemains();
+  clearHostileShots();
   if(wave===5||wave===10){
     showPanel(wave===10?'🏆 야간 스테이지 클리어!':'🏆 스테이지 1 클리어!',`기지 체력 <b>${hp}/100</b> · 플레이어 체력 <b>${playerHp}/100</b><br>좀비 <b>${kills}마리</b> 처치${supplySummary()}`,[
       {text:'계속하기 · 상점 ▶',action:showShop},
@@ -1032,7 +1161,7 @@ function showShop() {
   growthButton.onclick=openGrowth;
   choices.replaceChildren(layout,growthButton,tests);
 }
-function reset(){growth=freshGrowth();supplyWave=0;supplyNote='';latestCheckpoint=null;inventoryItems={};prepareAudio();clearBarrier();
+function reset(){growth=freshGrowth();supplyWave=0;supplyNote='';pendingSupplies=null;latestCheckpoint=null;inventoryItems={};prepareAudio();clearBarrier();
   try{localStorage.removeItem(checkpointKey)}catch{}
 clearRemains();clearTimeout(playerHitTimer);$('playerHit').hidden=true;for(const upgrades of weaponUpgrades){upgrades.attack=0;upgrades.rate=0;}clearHostileShots();playerHp=100;enemies.slice().forEach(removeEnemy);bullets.forEach(b=>scene.remove(b));bullets.length=0;particles.forEach(p=>scene.remove(p));particles.length=0;hp=100;ownedWeapons=new Set([0]);rateLevel=0;wave=1;coins=0;kills=0;level=1;damage=18;fireRate=.3;lastShot=0;targetX=0;player.position.x=0;equipWeapon(0);updateHUD();beginWave()}$('start').onclick=()=>{hardMode=false;reset()};$('hardStart').onclick=()=>{hardMode=true;reset()};
 const moveRay=new THREE.Raycaster();
@@ -1078,6 +1207,7 @@ window.addEventListener('resize',()=>{
   dragPointer=null;
   frameStreet();
   renderer.setSize(innerWidth,innerHeight);
+  if(supplyDialog.open)renderer.render(scene,camera);
 });
 frameStreet();
 function clearHostileShots(){
@@ -1374,7 +1504,7 @@ function updateEnemyAction(enemy,dt){
     for(const {joint,amplitude,rest} of data.gait)joint.rotation.x=rest+swing*amplitude;
   }
 }
-function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);elapsed+=dt;updateHitFlash(player,dt);if(playing){tickObstacles(dt);player.position.x=THREE.MathUtils.damp(player.position.x,targetX,9+growth.agility*1.5,dt);player.rotation.z=Math.sin(elapsed*7)*.015;spawnTimer-=dt;if(spawned<toSpawn&&spawnTimer<=0&&(hardMode||wave!==1||enemies.length===0)){makeEnemy();const gap=(!hardMode||wave>=6)?openingWaves[wave]?.[spawned]?.gap:null;spawned++;spawnTimer=wave%5===0&&spawned===toSpawn-1?2:(gap??Math.max(.28,1.15-wave*.04));updateBossHud()}lastShot+=dt;if(lastShot>=fireRate){lastShot=0;fire()}for(const e of enemies.slice()){updateHitFlash(e,dt);updateEnemyAction(e,dt);e.userData.legs?.forEach((leg,i)=>{leg.rotation.x=Math.sin(elapsed*e.userData.speed*3+e.userData.phase)*(i===0||i===3?.42:-.42)});e.rotation.z=Math.sin(elapsed*(e.userData.runner?12:5)+e.userData.phase)*.045;if(e.position.z>4.65){waveStats.baseDamage+=Math.min(hp,e.userData.attack);hp=Math.max(0,hp-e.userData.attack);showHurt('baseStat');effect(160,48,.23,.09);burst(e.position.x,1,4.6,0xff6c6c);removeEnemy(e);updateHUD();if(hp<=0){showPanel('💀 방어선 붕괴',`<b>${wave} 웨이브</b>까지 도전!<br>좀비 ${kills}마리를 처치했습니다.`,defeatOptions());break}}}for(const b of playing?bullets.slice():[]){const previous=b.position.clone();b.position.addScaledVector(b.userData.vel,dt);b.userData.life-=dt;let hit=null;for(const e of enemies){const pos=e.position.clone().add(new THREE.Vector3(0,e.userData.hitHeight??(e.userData.big?3.64:1.65),0));const segment=b.position.clone().sub(previous);const len2=segment.lengthSq();const t=len2?THREE.MathUtils.clamp(pos.clone().sub(previous).dot(segment)/len2,0,1):0;const closest=previous.clone().addScaledVector(segment,t);if(closest.distanceTo(pos)<(e.userData.hitRadius??(e.userData.big?2.379:.85))){hit=e;break}}if(hit) damageEnemy(hit,b.userData.damage,b.position);if(hit||b.userData.life<=0||b.position.z< -90){scene.remove(b);bullets.splice(bullets.indexOf(b),1)}}if(playing)updateHostileShots(dt);if(spawned>=toSpawn&&enemies.length===0&&playing)nextShop()}for(const p of particles.slice()){p.userData.life-=dt;p.position.addScaledVector(p.userData.vel,dt);p.userData.vel.y-=dt*8;p.scale.multiplyScalar(.93);if(p.userData.life<=0){scene.remove(p);particles.splice(particles.indexOf(p),1)}}aimLine.visible=playing;aimLine.position.set(player.position.x+gripOrigin.x,0,player.position.z+gripOrigin.z-.93*gun.scale.z);tail.rotation.z=Math.sin(elapsed*4)*.065+(targetX-player.position.x)*.065;const lateralVelocity=playing?(player.position.x-previousAvatarX)/Math.max(dt,.001):0;
+function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);if(supplyDialog.open)return;elapsed+=dt;updateHitFlash(player,dt);if(playing){tickObstacles(dt);player.position.x=THREE.MathUtils.damp(player.position.x,targetX,9+growth.agility*1.5,dt);player.rotation.z=Math.sin(elapsed*7)*.015;spawnTimer-=dt;if(spawned<toSpawn&&spawnTimer<=0&&(hardMode||wave!==1||enemies.length===0)){makeEnemy();const gap=(!hardMode||wave>=6)?openingWaves[wave]?.[spawned]?.gap:null;spawned++;spawnTimer=wave%5===0&&spawned===toSpawn-1?2:(gap??Math.max(.28,1.15-wave*.04));updateBossHud()}lastShot+=dt;if(lastShot>=fireRate){lastShot=0;fire()}for(const e of enemies.slice()){updateHitFlash(e,dt);updateEnemyAction(e,dt);e.userData.legs?.forEach((leg,i)=>{leg.rotation.x=Math.sin(elapsed*e.userData.speed*3+e.userData.phase)*(i===0||i===3?.42:-.42)});e.rotation.z=Math.sin(elapsed*(e.userData.runner?12:5)+e.userData.phase)*.045;if(e.position.z>4.65){waveStats.baseDamage+=Math.min(hp,e.userData.attack);hp=Math.max(0,hp-e.userData.attack);showHurt('baseStat');effect(160,48,.23,.09);burst(e.position.x,1,4.6,0xff6c6c);removeEnemy(e);updateHUD();if(hp<=0){showPanel('💀 방어선 붕괴',`<b>${wave} 웨이브</b>까지 도전!<br>좀비 ${kills}마리를 처치했습니다.`,defeatOptions());break}}}for(const b of playing?bullets.slice():[]){const previous=b.position.clone();b.position.addScaledVector(b.userData.vel,dt);b.userData.life-=dt;let hit=null;for(const e of enemies){const pos=e.position.clone().add(new THREE.Vector3(0,e.userData.hitHeight??(e.userData.big?3.64:1.65),0));const segment=b.position.clone().sub(previous);const len2=segment.lengthSq();const t=len2?THREE.MathUtils.clamp(pos.clone().sub(previous).dot(segment)/len2,0,1):0;const closest=previous.clone().addScaledVector(segment,t);if(closest.distanceTo(pos)<(e.userData.hitRadius??(e.userData.big?2.379:.85))){hit=e;break}}if(hit) damageEnemy(hit,b.userData.damage,b.position);if(hit||b.userData.life<=0||b.position.z< -90){scene.remove(b);bullets.splice(bullets.indexOf(b),1)}}if(playing)updateHostileShots(dt);if(spawned>=toSpawn&&enemies.length===0&&playing)nextShop()}for(const p of particles.slice()){p.userData.life-=dt;p.position.addScaledVector(p.userData.vel,dt);p.userData.vel.y-=dt*8;p.scale.multiplyScalar(.93);if(p.userData.life<=0){scene.remove(p);particles.splice(particles.indexOf(p),1)}}aimLine.visible=playing;aimLine.position.set(player.position.x+gripOrigin.x,0,player.position.z+gripOrigin.z-.93*gun.scale.z);tail.rotation.z=Math.sin(elapsed*4)*.065+(targetX-player.position.x)*.065;const lateralVelocity=playing?(player.position.x-previousAvatarX)/Math.max(dt,.001):0;
 previousAvatarX=player.position.x;
 if(femaleWalk&&femaleGlb.visible){
   const speed=Math.abs(lateralVelocity);
@@ -1423,7 +1553,7 @@ const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
   if(bossTest)return;
   const snapshot=JSON.stringify({
-      hardMode,wave,hp,playerHp,coins,kills,weaponIndex,avatar,outfit,streetTheme,waveStats,growth,supplyWave,supplyNote,
+      hardMode,wave,hp,playerHp,coins,kills,weaponIndex,avatar,outfit,streetTheme,waveStats,growth,supplyWave,supplyNote,pendingSupplies,
       owned:[...ownedWeapons],upgrades:weaponUpgrades,inventoryItems
   });
   latestCheckpoint=JSON.parse(snapshot);
@@ -1448,7 +1578,7 @@ const checkpoint=loadCheckpoint();
 if(checkpoint){
   const button=$('continueRun');
   button.hidden=false;
-  button.textContent=`이어하기 · ${checkpoint.hardMode?"하드":"일반"} · ${checkpoint.wave+1}웨이브 준비`;
+  button.textContent=`이어하기 · ${checkpoint.hardMode?"하드":"일반"} · ${savedSupplyCards(checkpoint)?`${checkpoint.wave}웨이브 보급`:`${checkpoint.wave+1}웨이브 준비`}`;
   button.onclick=()=>restoreCheckpoint(checkpoint);
 }
 function bossTestOptions(){
@@ -1477,6 +1607,11 @@ function defeatOptions(){
     {text:'1웨이브부터 다시 시작',secondary:true,action:reset}
   ];
 }
+function savedSupplyCards(checkpoint){
+    const cards=checkpoint.pendingSupplies;
+    return checkpoint.supplyWave!==checkpoint.wave&&Array.isArray(cards)&&cards.length===3&&
+      cards.every(roll=>typeof roll==='number'&&roll>=0&&roll<1)?cards.slice():null;
+}
 function restoreCheckpoint(checkpoint){
     clearBarrier();clearRemains();clearHostileShots();
     enemies.slice().forEach(removeEnemy);
@@ -1503,6 +1638,7 @@ function restoreCheckpoint(checkpoint){
     growth.points=Math.min(growth.points,growth.level-1);
     for(const {key} of growthSkills)growth[key]=Math.min(4,growth[key]);
     supplyWave=checkpoint.supplyWave===wave?wave:0;
+    pendingSupplies=savedSupplyCards(checkpoint);
     // Stored values are rendered inside the shop HTML; accept only known reward labels.
     const storedSupply=checkpoint.supplyNote;
     supplyNote=typeof storedSupply==='string'&&/^(골드 \+14|보급 교환 · 골드 \+9|응급 키트 · 생존자 체력 \+(?:[1-9]|1[0-6])|감속 매트 \+1|바리케이드 \+1)$/.test(storedSupply)?storedSupply:'';
@@ -1517,7 +1653,18 @@ function restoreCheckpoint(checkpoint){
     checkpoint.upgrades.forEach((item,index)=>Object.assign(weaponUpgrades[index],item));
     intermission=true;
     equipWeapon(checkpoint.weaponIndex);
-    showShop();
+    if(pendingSupplies){
+      playing=false;
+      $('panel').style.display='none';
+      $('loadout').hidden=false;
+      $('wave').textContent=hardMode?wave+' · 하드':wave;
+      updateHUD();
+      updateIllustratedActors(0);
+      renderer.render(scene,camera);
+      openSupplyCards();
+    }else{
+      showShop();
+    }
 }
 
 /* Shared quarantine street art for every wave. */
