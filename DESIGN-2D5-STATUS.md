@@ -54,3 +54,9 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Added illustrated brick textures, inset window panes, facade trim, and street-edge emergency beacons. Cool ambient light and warm direct light give the level more depth.
 - Added soft ground contact shadows to the survivor and enemies. Raised the survivor marker just above the illustrated street to prevent it from disappearing below the ground layer.
 - The four viewport logic checks cover the texture fallback and activation, ground-marker layering, and actor shadow cleanup. The Android GPU appearance and frame rate still require on-device review.
+
+## Painted combat actors
+
+- Illustrated full-body replacements for both survivors, the ordinary and specialist infected, ranged infected, dog/bear/tiger variants, armored bosses, and the final boss. Sprites are integrated into the 3D scene with depth testing and independent contact shadows.
+- The female survivor selects ready, sidestep, and recoil poses. Enemies use pose motion driven by ground distance, hit tint, and distinct boss charge and casualty poses. Sprites fall back to the existing actor meshes if their art fails to load.
+- Hit bounds, damage, shop behavior, items, and waves remain driven by the existing game. Illustrated survivors carry a drawn weapon silhouette across the reload and equipment states.

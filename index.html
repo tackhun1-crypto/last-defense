@@ -374,8 +374,10 @@ gun.add(muzzleFlash);
 let muzzleTime=0;
 const fuelTank=box(.35,.31,.64,mat(0xd67836),0,-.22,-.10,gun);
 fuelTank.visible=false;
-box(.30,.29,.29,skin,.46,1.60,-.46,player);
-box(.28,.25,.26,skin,.36,1.70,-.88,player);
+const weaponHands=[
+  box(.30,.29,.29,skin,.46,1.60,-.46,player),
+  box(.28,.25,.26,skin,.36,1.70,-.88,player)
+];
 const aimLine = new THREE.Line(
   new THREE.BufferGeometry().setFromPoints([
     new THREE.Vector3(0, .085, 0),
@@ -523,7 +525,9 @@ if(big){
   e.userData.core=core;
 }
 e.scale.setScalar(chief?2.68:big?2.145:1);const health=enemyHealth(big?(chief?480:bossRole?290:180+wave*22):(role==='baby'?27:role==='carpenter'?55:40)+wave*10);
-e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};e.userData.label=textSprite(e.userData.hp);e.userData.label.position.set(0,e.userData.labelHeight??(big?4.7:3.15*body),0);e.add(e.userData.label);scene.add(e);addContactShadow(e,body*e.scale.x*1.85,body*e.scale.x*1.2);enemies.push(e);if(big)updateBossHud()}const animalStats={
+e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};e.userData.label=textSprite(e.userData.hp);e.userData.label.position.set(0,e.userData.labelHeight??(big?4.7:3.15*body),0);e.add(e.userData.label);scene.add(e);e.userData.illustration=chief?'chief':big?'armored':ranged?'ranged':
+  ({police:'police',nurse:'nurse',carpenter:'worker'}[role]??(supportX!==null?'heavy':'infected'));
+e.userData.artHeight=(big?2.43:2.75)*body*e.scale.y;addContactShadow(e,body*e.scale.x*1.85,body*e.scale.x*1.2);enemies.push(e);if(big)updateBossHud()}const animalStats={
   dog:{size:.84,hp:24,speed:4.6,color:0xa66d56,attack:10},
   bear:{size:2.145,hp:90,speed:1.65,color:0x655047,attack:16},
   tiger:{size:1.05,hp:48,speed:3.5,color:0xd89145,attack:12}
@@ -581,6 +585,8 @@ function makeAnimal(enemy,kind){
   enemy.userData.label.position.y=enemy.userData.labelHeight;
   enemy.add(enemy.userData.label);
   scene.add(enemy);
+  enemy.userData.illustration=kind;
+  enemy.userData.artHeight=1.86*size;
   addContactShadow(enemy,2*size,3*size);
   enemies.push(enemy);
 }
@@ -625,7 +631,10 @@ function updateLabel(e){e.remove(e.userData.label);e.userData.label.material.map
     $('bossStatus').textContent='⚠ 거대 좀비 접근 중!';
   }
 }
-function removeEnemy(e){scene.remove(e);if(e.userData.contactShadow)scene.remove(e.userData.contactShadow);const i=enemies.indexOf(e);if(i>=0)enemies.splice(i,1);if(e.userData.big)updateBossHud()}let lastHitSound=-Infinity;
+function removeEnemy(e){scene.remove(e);if(e.userData.artSprite){
+  e.userData.artSprite.removeFromParent();
+  if(e.userData.hp>0){e.userData.artSprite.material.dispose();e.userData.artSprite=null;}
+}if(e.userData.contactShadow)scene.remove(e.userData.contactShadow);const i=enemies.indexOf(e);if(i>=0)enemies.splice(i,1);if(e.userData.big)updateBossHud()}let lastHitSound=-Infinity;
 const hitNumberPosition=new THREE.Vector3();
 const hitNumberScreen=new THREE.Vector3();
 let hitNumberTime=0;
@@ -947,6 +956,8 @@ const bloodMaterial=new THREE.MeshBasicMaterial({color:0x8c2934});
 function clearRemains(){
   for(const object of remains){
     scene.remove(object);
+    object.userData.artSprite?.removeFromParent();
+    object.userData.artSprite?.material.dispose();
     object.traverse(child=>{
       child.geometry?.dispose();
       if(child.isMesh&&child.material!==bloodMaterial&&child.material!==dark&&child.material!==hitFlashMaterial)child.material.dispose();
@@ -963,6 +974,7 @@ function leaveBody(enemy){
   enemy.rotation.set(0,0,Math.PI/2);
   enemy.position.y=.35;
   scene.add(enemy);
+  if(enemy.userData.artSprite)scene.add(enemy.userData.artSprite);
   remains.push(enemy);
 }
 function leaveBlood(){
@@ -1237,7 +1249,10 @@ if(muzzleFlash.visible){
   const strength=muzzleTime/.075;
   muzzleFlash.scale.set(.08+.16*strength,.08+.16*strength,.19+.29*strength);
 }
-positionContactShadow(player);for(const enemy of enemies)positionContactShadow(enemy);updateDesignPilot();updateFemaleArtPass();updateHitNumber(dt);renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
+positionContactShadow(player);
+for(const enemy of enemies)positionContactShadow(enemy);
+updateIllustratedActors(lateralVelocity);
+updateDesignPilot();updateFemaleArtPass();updateHitNumber(dt);renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
 const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
   if(bossTest)return;
@@ -1466,5 +1481,129 @@ for(const [x,z] of [[-7.15,1.4],[7.16,-12],[-7.15,-23]]){
 }
 const campLight=new THREE.PointLight(0xffb75e,15,17,2);campLight.position.set(-5,4,4);scene.add(campLight);
 sun.shadow.normalBias=.025;
+
+// Painted character layers use the same world positions, while the existing
+// actor objects continue to own motion, hit bounds, weapons and the fallback art.
+const actorFrames=Object.create(null);
+const atlasManifest=[
+  ['./assets/actors-hero.webp',['hero-ready','hero-step-a','hero-step-b','hero-fire']],
+  ['./assets/actors-infected.webp',['infected','police','nurse','worker']],
+  ['./assets/actors-boss.webp',['armored','chief','ranged','heavy']],
+  ['./assets/actors-animals.webp',['dog','bear','tiger','male']]
+];
+function loadActorAtlas(url,frames){
+  const img=document.createElement('img');
+  img.onload=()=>{
+    const atlas=new THREE.Texture(img);
+    atlas.colorSpace=THREE.SRGBColorSpace;
+    atlas.generateMipmaps=false;
+    atlas.minFilter=THREE.LinearFilter;
+    frames.forEach((key,i)=>{
+      const frame=i===0?atlas:atlas.clone();
+      frame.repeat.set(.5,.5);
+      frame.offset.set((i%2)*.5,i<2?.5:0);
+      frame.needsUpdate=true;
+      actorFrames[key]=frame;
+    });
+  };
+  img.src=url;
+  return img;
+}
+const actorAtlasImages=atlasManifest.map(([url,frames])=>loadActorAtlas(url,frames));
+function newPaintedActor(){
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({alphaTest:.27,depthWrite:true,toneMapped:false}));
+  sprite.center.set(.5,.04);
+  scene.add(sprite);
+  return sprite;
+}
+const heroSprite=newPaintedActor();
+heroSprite.visible=false;
+const paintedMuzzle=new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false}));
+paintedMuzzle.visible=false;
+scene.add(paintedMuzzle);
+const flashCanvas=document.createElement('canvas');
+flashCanvas.width=flashCanvas.height=64;
+const flashInk=flashCanvas.getContext('2d');
+flashInk.fillStyle='#ffdd8c';
+flashInk.beginPath();
+flashInk.moveTo(32,0);flashInk.lineTo(37,26);flashInk.lineTo(64,32);
+flashInk.lineTo(37,38);flashInk.lineTo(32,64);flashInk.lineTo(27,38);
+flashInk.lineTo(0,32);flashInk.lineTo(27,26);flashInk.closePath();flashInk.fill();
+paintedMuzzle.material.map=new THREE.CanvasTexture(flashCanvas);
+
+const actorScreenRight=new THREE.Vector3(),actorScreenUp=new THREE.Vector3();
+function applyPaintedFrame(sprite,frame,height){
+  if(sprite.material.map!==frame){
+    sprite.material.map=frame;
+    sprite.material.needsUpdate=true;
+  }
+  sprite.scale.set(height*320/384,height,1);
+}
+function updateIllustratedActors(lateralVelocity){
+  const female=avatar==='female';
+  let pose=female?'hero-ready':'male';
+  if(female&&playing){
+    if(muzzleTime>0)pose='hero-fire';
+    else if(Math.abs(lateralVelocity)>.5)pose=Math.floor(elapsed*7)%2?'hero-step-a':'hero-step-b';
+  }
+  const heroFrame=actorFrames[pose]??actorFrames[female?'hero-ready':'male'];
+  heroSprite.visible=Boolean(heroFrame);
+  if(heroFrame){
+    applyPaintedFrame(heroSprite,heroFrame,3.04);
+    heroSprite.position.copy(player.position);
+    heroSprite.position.y=.09+(playing?Math.sin(elapsed*7)*.017:0);
+    heroSprite.material.rotation=-Math.min(.05,recoil*.9);
+    heroSprite.material.color.setHex(flinch>.48?0xffb4a0:0xffffff);
+    survivor.visible=maleSurvivor.visible=false;
+    if(femaleGlb)femaleGlb.visible=false;
+  }else{
+    survivor.visible=female&&!femaleGlb;
+    maleSurvivor.visible=!female;
+    if(femaleGlb)femaleGlb.visible=female;
+  }
+  gun.visible=!heroFrame;
+  for(const hand of weaponHands)hand.visible=!heroFrame;
+  paintedMuzzle.visible=Boolean(heroFrame)&&playing&&muzzleTime>0;
+  if(paintedMuzzle.visible){
+    const [mx,my]=muzzleAnchors[pose]??muzzleAnchors['hero-ready'];
+    actorScreenRight.setFromMatrixColumn(camera.matrixWorld,0);
+    actorScreenUp.setFromMatrixColumn(camera.matrixWorld,1);
+    paintedMuzzle.position.copy(heroSprite.position)
+      .addScaledVector(actorScreenRight,(mx-.5)*heroSprite.scale.x)
+      .addScaledVector(actorScreenUp,(my-.04)*heroSprite.scale.y);
+    const brightness=muzzleTime/.075;
+    paintedMuzzle.material.opacity=Math.min(.98,brightness*1.3);
+    paintedMuzzle.material.color.setHex(weapons[weaponIndex].color);
+    paintedMuzzle.scale.setScalar(.42+brightness*.22);
+  }
+  for(const enemy of enemies)drawIllustratedEnemy(enemy,false);
+  for(const enemy of remains)if(enemy.userData.artSprite)drawIllustratedEnemy(enemy,true);
+}
+
+function drawIllustratedEnemy(enemy,fallen){
+  const data=enemy.userData;
+  const frame=actorFrames[data.illustration];
+  if(!frame)return;
+  if(!data.artSprite){
+    data.artSprite=newPaintedActor();
+    for(const mesh of enemy.children)if(mesh!==data.label)mesh.visible=false;
+  }
+  const sprite=data.artSprite;
+  const stride=(data.walkDistance??enemy.position.z)*4.8+data.phase;
+  const bossMotion=data.dash>0?1.08:data.windup>0?.85:1;
+  applyPaintedFrame(sprite,frame,data.artHeight*bossMotion);
+  sprite.position.copy(enemy.position);
+  sprite.position.y+=fallen?.34:.06+Math.abs(Math.sin(stride))*.042;
+  sprite.center.set(.5,fallen?.5:.04);
+  sprite.material.rotation=fallen?-1.49:Math.sin(stride)*.047+(data.dash>0?.09:0);
+  sprite.material.color.setHex(fallen?0x957e79:data.flashTime>0?0xffc0a7:0xf6f0ed);
+}
+const muzzleAnchors={
+  'hero-ready':[.966,.763],
+  'hero-step-a':[.966,.779],
+  'hero-step-b':[.966,.737],
+  'hero-fire':[.919,.867],
+  male:[.966,.693]
+};
 
 updateHUD();loop();</script></body></html>

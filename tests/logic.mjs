@@ -23,6 +23,14 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  vm.runInContext(code,context);
  vm.runInContext(`
  assert.equal(avatar,'female');
+ assert.equal(heroSprite.visible,false);
+ for(const image of actorAtlasImages)image.onload();
+ updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames['hero-ready']);
+ assert.equal(gun.visible,false);
+ selectAvatar('male');updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames.male);
+ selectAvatar('female');
  assert.equal($('survivorPortrait').dataset.avatar,'female');
  selectAvatar('male');assert.equal($('survivorPortrait').dataset.avatar,'male');
  selectAvatar('female');
@@ -39,6 +47,9 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  reset(); assert.equal(playing,true);assert.equal(wave,1);assert.equal(hp,100);
  makeEnemy(); assert.equal(enemies.length,1);
  const victim=enemies[0];
+ updateIllustratedActors(0);
+ assert.equal(victim.userData.artSprite.material.map,actorFrames.police);
+ assert.equal(victim.userData.label.visible,true);
  const victimShadow=victim.userData.contactShadow;
  assert.equal(victimShadow.parent,scene);
  const animatedArm=victim.userData.gait[0].joint;
@@ -51,6 +62,9 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  flashHit(victim);assert.equal(animatedArm.children[0].material,hitFlashMaterial);
  updateHitFlash(victim,.2);assert.equal(animatedArm.children[0].material,fabric);
  damageEnemy(victim,999,victim.position);assert.equal(kills,1);assert.equal(coins,8);assert.equal(victimShadow.parent,null);
+ updateIllustratedActors(0);
+ assert.equal(victim.userData.artSprite.center.y,.5);
+ assert.equal(victim.userData.artSprite.parent,scene);
  assert.equal($('damage').textContent,999);
  assert.equal(hitNumberTime,.42);
  updateHitNumber(.5);
@@ -69,7 +83,10 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  $('itemsDialog').close();
  for(let i=0;i<weapons.length;i++){ownedWeapons.add(i);equipWeapon(i);assert.ok(damage>0);assert.ok(fireRate>0);}
  saveCheckpoint();const cp=loadCheckpoint();assert.ok(cp);assert.equal(cp.wave,1);
- for(const number of [5,10]){enemies.slice().forEach(removeEnemy);wave=number;spawned=toSpawn-1;makeEnemy();assert.equal(enemies.filter(e=>e.userData.big).length,number===10?3:1);updateDesignPilot();assert.equal(designPilot.visible,true);}
+ for(const number of [5,10]){enemies.slice().forEach(removeEnemy);wave=number;spawned=toSpawn-1;makeEnemy();assert.equal(enemies.filter(e=>e.userData.big).length,number===10?3:1);updateDesignPilot();assert.equal(designPilot.visible,true);
+ updateIllustratedActors(0);
+ const boss=enemies.find(e=>e.userData.chief)||enemies.find(e=>e.userData.big);
+ assert.equal(boss.userData.artSprite.material.map,actorFrames[number===10?'chief':'armored']);}
  restoreCheckpoint(cp);
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  beginWave();
@@ -84,6 +101,9 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  tickObstacles(10);assert.equal(deployed.length,0);
  equipWeapon(0);fire();
  assert.equal(muzzleTime,.075);
+ updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames['hero-fire']);
+ assert.equal(paintedMuzzle.visible,true);
  assert.equal(bullets.at(-1).userData.vel.x,0);
  assert.ok(bullets.at(-1).userData.vel.z<0);
  const hit=new THREE.Mesh(new THREE.BoxGeometry(),hostileMaterial);
