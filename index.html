@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAST DEFENSE · Prototype</title><style>*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#101a25;font-family:system-ui,'Noto Sans KR',sans-serif;color:white;touch-action:none}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}#top{display:flex;justify-content:space-between;align-items:start;padding:16px;gap:10px} .pill{background:#142333cc;border:1px solid #ffffff33;border-radius:15px;padding:10px 13px;box-shadow:0 6px 20px #0003;font-weight:800;font-size:14px}#health{height:9px;width:130px;background:#4b222b;border-radius:10px;overflow:hidden;margin-top:7px}#healthFill{height:100%;background:#63e6a2;width:100%}#bottom{position:absolute;bottom:20px;width:100%;text-align:center;font-size:13px;text-shadow:0 2px 4px #000;opacity:.85}#panel{position:absolute;inset:0;background:#0b1525b9;display:flex;align-items:center;justify-content:center;pointer-events:auto;padding:20px}#card{width:min(410px,100%);background:linear-gradient(150deg,#253e58,#142235);padding:25px;border-radius:24px;border:1px solid #ffffff30;box-shadow:0 20px 80px #0008;text-align:center}h1{font-size:30px;margin:5px 0 12px;letter-spacing:1px}p{line-height:1.6;color:#dce7f5}button{border:0;border-radius:13px;background:#f4bb45;color:#1c2735;font-size:17px;font-weight:900;padding:15px 22px;width:100%;margin-top:10px;cursor:pointer}.secondary{background:#74d8db}#choices{display:grid;gap:8px}.small{font-size:12px;opacity:.8}#damage{position:absolute;left:50%;top:30%;transform:translateX(-50%);font-size:40px;font-weight:900;color:#ffdb75;text-shadow:0 3px 12px #000;opacity:0;transition:opacity .2s}#error{position:absolute;inset:0;display:none;background:#172333;padding:30px;z-index:30}#bossHud{position:absolute;top:104px;left:50%;transform:translateX(-50%);width:min(360px,90vw);text-align:center;background:#39243a;padding:9px;border-radius:12px}#bossHud progress{display:block;width:100%;accent-color:#f17e85}#card{max-height:90dvh;overflow:auto;touch-action:pan-y}button:disabled{opacity:.55;cursor:default}@media(max-width:420px){#top{padding:8px;gap:5px}.pill{padding:7px;font-size:12px}#health{width:86px}}.hurt{outline:3px solid #ff8b83}#baseStat{border-radius:4px}#loadout{position:absolute;bottom:48px;left:10px;width:min(240px,65vw);padding:8px;background:#142333e8;border-radius:10px;font-size:12px;pointer-events:auto}#loadout[hidden]{display:none}#weaponSlots{display:grid;grid-template-columns:1fr 1fr;gap:4px}#weaponSlots button{font-size:11px;padding:6px 3px;margin:0;min-height:38px;background:#d9e9f5}#weaponSlots button[aria-pressed=true]{background:#f4bb45}#loadout{width:max-content;max-width:calc(100vw - 20px);padding:5px;bottom:calc(43px + env(safe-area-inset-bottom))}
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAST DEFENSE · Quarantine</title><style>*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#101a25;font-family:system-ui,'Noto Sans KR',sans-serif;color:white;touch-action:none}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}#top{display:flex;justify-content:space-between;align-items:start;padding:16px;gap:10px} .pill{background:#142333cc;border:1px solid #ffffff33;border-radius:15px;padding:10px 13px;box-shadow:0 6px 20px #0003;font-weight:800;font-size:14px}#health{height:9px;width:130px;background:#4b222b;border-radius:10px;overflow:hidden;margin-top:7px}#healthFill{height:100%;background:#63e6a2;width:100%}#bottom{position:absolute;bottom:20px;width:100%;text-align:center;font-size:13px;text-shadow:0 2px 4px #000;opacity:.85}#panel{position:absolute;inset:0;background:#0b1525b9;display:flex;align-items:center;justify-content:center;pointer-events:auto;padding:20px}#card{width:min(410px,100%);background:linear-gradient(150deg,#253e58,#142235);padding:25px;border-radius:24px;border:1px solid #ffffff30;box-shadow:0 20px 80px #0008;text-align:center}h1{font-size:30px;margin:5px 0 12px;letter-spacing:1px}p{line-height:1.6;color:#dce7f5}button{border:0;border-radius:13px;background:#f4bb45;color:#1c2735;font-size:17px;font-weight:900;padding:15px 22px;width:100%;margin-top:10px;cursor:pointer}.secondary{background:#74d8db}#choices{display:grid;gap:8px}.small{font-size:12px;opacity:.8}#damage{position:absolute;left:50%;top:30%;transform:translateX(-50%);font-size:40px;font-weight:900;color:#ffdb75;text-shadow:0 3px 12px #000;opacity:0;transition:opacity .2s}#error{position:absolute;inset:0;display:none;background:#172333;padding:30px;z-index:30}#bossHud{position:absolute;top:104px;left:50%;transform:translateX(-50%);width:min(360px,90vw);text-align:center;background:#39243a;padding:9px;border-radius:12px}#bossHud progress{display:block;width:100%;accent-color:#f17e85}#card{max-height:90dvh;overflow:auto;touch-action:pan-y}button:disabled{opacity:.55;cursor:default}@media(max-width:420px){#top{padding:8px;gap:5px}.pill{padding:7px;font-size:12px}#health{width:86px}}.hurt{outline:3px solid #ff8b83}#baseStat{border-radius:4px}#loadout{position:absolute;bottom:48px;left:10px;width:min(240px,65vw);padding:8px;background:#142333e8;border-radius:10px;font-size:12px;pointer-events:auto}#loadout[hidden]{display:none}#weaponSlots{display:grid;grid-template-columns:1fr 1fr;gap:4px}#weaponSlots button{font-size:11px;padding:6px 3px;margin:0;min-height:38px;background:#d9e9f5}#weaponSlots button[aria-pressed=true]{background:#f4bb45}#loadout{width:max-content;max-width:calc(100vw - 20px);padding:5px;bottom:calc(43px + env(safe-area-inset-bottom))}
 #weaponSlots{display:flex;gap:3px}
 #weaponSlots button{display:grid;place-items:center;width:44px;height:44px;min-height:44px}
 #weaponStats{font-variant-numeric:tabular-nums;text-align:center;margin-bottom:3px}
@@ -30,6 +30,26 @@ body{font-family:"Inter",system-ui,"Noto Sans KR",sans-serif;background:#102126;
 #card .shop-inventory button[aria-pressed=true]{background:var(--accent)}
 #card .boss-tests button{background:#28454b;color:#e7f4f1;font-size:11px}
 #purchaseDialog,#itemsDialog{background:#142c31;color:var(--text);border-color:var(--edge);border-radius:12px}
+
+/* Quarantine: restrained metal HUD, safe-area aware touch controls. */
+:root{--accent:#f4bd59;--edge:#696563;--surface:#20232a;--muted:#ccd0d5}
+.pill,#loadout{background:linear-gradient(160deg,#30343aee,#101319ed);border:1px solid #77756e;box-shadow:0 3px 12px #0008,inset 0 1px #ffffff16}
+.pill{font-size:14px;padding:9px 12px;border-radius:9px}
+#health{height:10px}#healthFill{background:linear-gradient(#7ef18e,#25a24b)}
+#card{background:linear-gradient(145deg,#30333b,#11151b);border-color:#75726b;border-top-color:#ed5045}
+#panel[data-screen=start]{background:linear-gradient(90deg,#090d16d9,#090d1670)}
+#panel[data-screen=start] h1{color:#fff;text-shadow:3px 4px #9b292d}
+#loadout{left:50%;transform:translateX(-50%);bottom:calc(30px + env(safe-area-inset-bottom));max-width:calc(100vw - 16px);padding:8px}
+#weaponStats{font-size:14px;color:#e9dfcb;padding:2px 5px 6px}
+#weaponSlots{justify-content:center;gap:6px}#weaponSlots button{width:58px;height:48px;background:linear-gradient(#62676b,#30353d);border:1px solid #949797}
+.weapon-icon{background:#e4e2d9;width:40px;height:24px}
+#weaponSlots button[aria-pressed=true]{background:#55452c;border:2px solid #ffce69;box-shadow:0 0 10px #f6b83a55}
+#itemSlots button{min-height:44px;font-size:14px;border:1px solid #777e83;background:#303d46}
+#bottom{font-size:12px;bottom:calc(6px + env(safe-area-inset-bottom))}
+#bossHud{top:calc(104px + env(safe-area-inset-top));background:#241b22ef;border:1px solid #d77060}
+dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-action:pan-y}
+@media(max-width:480px){.pill{font-size:12px;padding:7px}#top{gap:4px}#health{width:90px}#playerStat{font-size:11px}#loadout{padding:6px}#weaponStats{font-size:12px}#bossHud{top:98px}}
+@media(max-height:500px){#top{padding:6px}.pill{font-size:12px;padding:5px 9px}#loadout{left:auto;right:8px;transform:none;bottom:22px}#bossHud{top:6px;width:32vw}#card{max-height:calc(100dvh - 16px);padding:14px}#description{margin-bottom:5px}#card button{margin-top:6px}}
 </style></head><body><div id="hud"><div id="top"><div class="pill"><div id="baseStat">🛡️ 기지 <span id="hptext">100 / 100</span></div><div id="health"><div id="healthFill"></div></div><div id="playerStat">👤 <span id="playerHp">100</span>/100<span id="playerHit" hidden>−12</span><progress id="playerMeter" max="100" value="100" aria-label="플레이어 체력"></progress></div></div><div class="pill">🌊 웨이브 <span id="wave">1</span><br>💰 <span id="coins">0</span></div><div class="pill">🎯 처치 <span id="kills">0</span><br>🔫 Lv.<span id="level">1</span></div></div><div id="bossHud" hidden><strong id="bossStatus" role="status"></strong><progress id="bossBar" aria-label="거대 좀비 체력" hidden></progress><div id="bossTrio" hidden><div><span id="bossLabel0">왼쪽</span><progress id="bossHp0" aria-label="왼쪽 보스 체력"></progress></div><div><span id="bossLabel1">중앙</span><progress id="bossHp1" aria-label="중앙 보스 체력"></progress></div><div><span id="bossLabel2">오른쪽</span><progress id="bossHp2" aria-label="오른쪽 보스 체력"></progress></div></div></div><div id="damage">-10</div><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST DEFENSE</h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
@@ -160,7 +180,7 @@ const femaleRimLight=new THREE.PointLight(0xa6cfff,.7,4.8,2);
 femaleRimLight.position.set(-.75,2.35,.85);
 femaleArtGroup.add(femaleRimLight);
 function updateFemaleArtPass(){
-  const active=avatar==='female'&&wave===1;
+  const active=avatar==='female';
   femaleArtGroup.visible=active;
   if(active){
     femaleGroundGlow.material.opacity=.13+Math.sin(elapsed*2.4)*.025;
@@ -227,7 +247,7 @@ function selectAvatar(value){
 document.querySelectorAll('[data-avatar]').forEach(button=>{
   button.onclick=()=>selectAvatar(button.dataset.avatar);
 });
-selectAvatar(avatar);
+selectAvatar('female');
 const gun=new THREE.Group();
 gun.position.set(.46,1.73,-.58);
 player.add(gun);
@@ -287,12 +307,19 @@ const animal=opening?(['dog','bear','tiger'].includes(opening.kind)?opening.kind
 if(animal){makeAnimal(e,animal);return;}
 const role=opening?.kind==="carpenter"?"carpenter":big||ranged||supportX!==null?"": ["police","nurse","carpenter","baby"][spawned%4];
 const body=big?1.7:role==="baby"?.62:role==='carpenter'?1.534:1;
-const uniform={police:0x314d78,nurse:0xe3e1ea,carpenter:0xbb7d38,baby:0x8bbce6}[role];const zombieSkin=mat(chief?0xab6d69:big?0x9b8eac:0x83a58c);sphere(.42*body,zombieSkin,0,2.2*body,0,e);box(.85*body,1.05*body,.6*body,mat(big?0x783b5e:ranged?0x8346a4:(uniform??0x76635e)),0,1.5*body,0,e);for(const s of [-1,1]){box(.25*body,.9*body,.3*body,zombieSkin,s*.62*body,1.5*body,-.12,e);box(.28*body,.8*body,.32*body,dark,s*.22*body,.58*body,0,e)}const eyes=mat(0xf5e09a,{emissive:0xe4a330,emissiveIntensity:1});sphere(.07*body,eyes,-.16*body,2.25*body,-.36*body,e);sphere(.07*body,eyes,.16*body,2.25*body,-.36*body,e);if(role==="police"||role==="nurse"){
+const uniform={police:0x314d78,nurse:0xe3e1ea,carpenter:0xbb7d38,baby:0x8bbce6}[role];const zombieSkin=mat(chief?0xab6d69:big?0x9b8eac:0x93917e);sphere(.42*body,zombieSkin,0,2.2*body,0,e);box(.85*body,1.05*body,.6*body,mat(big?0x783b5e:ranged?0x8346a4:(uniform??0x76635e)),0,1.5*body,0,e);for(const s of [-1,1]){box(.25*body,.9*body,.3*body,zombieSkin,s*.62*body,1.5*body,-.12,e);box(.28*body,.8*body,.32*body,dark,s*.22*body,.58*body,0,e)}const eyes=mat(0xf5e09a,{emissive:0xe4a330,emissiveIntensity:1});sphere(.07*body,eyes,-.16*body,2.25*body,-.36*body,e);sphere(.07*body,eyes,.16*body,2.25*body,-.36*body,e);if(role==="police"||role==="nurse"){
   box(.62,.16,.53,mat(uniform),0,2.58,0,e);
   box(.52,.07,.29,mat(role==="police"?0x24354c:0xe3e1ea),0,2.52,.29,e);
 }
 if(role==="carpenter")box(.22,1.35,.35,mat(0x92613d),.62,1.45,-.15,e).rotation.z=.28;
 if(role==="baby")sphere(.11,mat(0xefd275),0,1.08,.25,e);
+// Facial recesses and torn cloth remain geometry, independent of collision bounds.
+const mouth=box(.22*body,.12*body,.035*body,mat(0x39262b),0,2.02*body,.39*body,e);
+for(const side of [-1,1]){
+ sphere(.055*body,eyes,side*.15*body,2.25*body,.37*body,e);
+ const cheek=box(.08*body,.19*body,.025*body,mat(0x713c38),side*.23*body,2.1*body,.35*body,e);cheek.rotation.z=side*.3;
+ const wound=box(.12*body,.35*body,.02*body,mat(0x673737),side*.24*body,1.5*body,.31*body,e);wound.rotation.z=side*.22;
+}
 if(!big){
   const torn=mat(0x494b42);
   for(const side of [-1,1]){
@@ -442,7 +469,7 @@ function updateLabel(e){e.remove(e.userData.label);e.userData.label.material.map
 }
 function removeEnemy(e){scene.remove(e);const i=enemies.indexOf(e);if(i>=0)enemies.splice(i,1);if(e.userData.big)updateBossHud()}let lastHitSound=-Infinity;
 function damageEnemy(hit,amount,position){
-hit.userData.hp-=amount;if(elapsed-lastHitSound>.075){lastHitSound=elapsed;effect(310,145,.055,.028);}burst(position.x,position.y,position.z);if(hit.userData.hp<=0){coins+=hit.userData.big?40:8;kills++;burst(hit.position.x,2,hit.position.z,0x99f0a3);removeEnemy(hit);leaveBody(hit);updateHUD()}else { updateLabel(hit); flashHit(hit); if(hit.userData.big){if(!hit.userData.chief&&!hit.userData.bossRole&&!hit.userData.roared&&hit.userData.hp<=hit.userData.maxHp/2){hit.userData.roared=true;hit.userData.roarTime=1.2;effect(105,39,.55,.11);}updateBossHud();} }
+hit.userData.hp-=amount;if(elapsed-lastHitSound>.075){lastHitSound=elapsed;effect(310,145,.055,.028);}burst(position.x,position.y,position.z);if(hit.userData.hp<=0){coins+=hit.userData.big?40:8;kills++;burst(hit.position.x,2,hit.position.z,0x9c3c36);removeEnemy(hit);leaveBody(hit);updateHUD()}else { updateLabel(hit); flashHit(hit); if(hit.userData.big){if(!hit.userData.chief&&!hit.userData.bossRole&&!hit.userData.roared&&hit.userData.hp<=hit.userData.maxHp/2){hit.userData.roared=true;hit.userData.roarTime=1.2;effect(105,39,.55,.11);}updateBossHud();} }
 }
 function fire() {
   recoil=[.045,.03,.085,.018][weaponIndex]??.045;
@@ -457,7 +484,8 @@ function fire() {
     for(const fraction of [.3,.6,.9]) burst(origin.x,origin.y,origin.z-weapon.range*fraction,weapon.color);
     return;
   }
-  const bullet = sphere(.12, gold, origin.x, origin.y, origin.z);
+  const bullet = sphere(.065, gold, origin.x, origin.y, origin.z);
+  bullet.scale.z=5;
   bullet.userData = { vel: new THREE.Vector3(0, 0, -37), life: 1.8, damage };
   bullets.push(bullet);
   burst(origin.x, origin.y, origin.z - .25, weapon.color);
@@ -527,7 +555,7 @@ function equipWeapon(index){
   gun.scale.set(...weapon.shape);
   fuelTank.visible=weapon.range<63;
   aimLine.scale.z=weapon.range/63;
-  $('weaponStats').textContent=`${damage} · ${(1/fireRate).toFixed(1)} · +${level-1}/+${rateLevel}`;
+  $('weaponStats').textContent=`${weapon.name} · 공격 ${damage} · 초당 ${(1/fireRate).toFixed(1)}발`;
   $('weaponStats').setAttribute('aria-label',`공격력 ${damage}, 초당 ${(1/fireRate).toFixed(1)}발, 공격 강화 ${level-1}, 연사 강화 ${rateLevel}`);
   const slots=weapons.flatMap((item,i)=>{
     if(!ownedWeapons.has(i))return [];
@@ -650,7 +678,15 @@ function showShop() {
 }
 function reset(){latestCheckpoint=null;inventoryItems={};prepareAudio();clearBarrier();
   try{localStorage.removeItem(checkpointKey)}catch{}
-clearRemains();clearTimeout(playerHitTimer);$('playerHit').hidden=true;for(const upgrades of weaponUpgrades){upgrades.attack=0;upgrades.rate=0;}clearHostileShots();playerHp=100;enemies.slice().forEach(removeEnemy);bullets.forEach(b=>scene.remove(b));bullets.length=0;particles.forEach(p=>scene.remove(p));particles.length=0;hp=100;ownedWeapons=new Set([0]);rateLevel=0;wave=1;coins=0;kills=0;level=1;damage=18;fireRate=.3;lastShot=0;targetX=0;player.position.x=0;equipWeapon(0);updateHUD();beginWave()}$('start').onclick=()=>{hardMode=false;reset()};$('hardStart').onclick=()=>{hardMode=true;reset()};function pointer(e){const x=(e.clientX/innerWidth)*2-1;targetX=THREE.MathUtils.clamp(x*6,-5.4,5.4)}renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;pointer(e)});window.addEventListener('pointermove',e=>{if(dragging)pointer(e)});window.addEventListener('pointerup',()=>dragging=false);window.addEventListener('pointercancel',()=>dragging=false);window.addEventListener('blur',()=>dragging=false);window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});function clearHostileShots(){
+clearRemains();clearTimeout(playerHitTimer);$('playerHit').hidden=true;for(const upgrades of weaponUpgrades){upgrades.attack=0;upgrades.rate=0;}clearHostileShots();playerHp=100;enemies.slice().forEach(removeEnemy);bullets.forEach(b=>scene.remove(b));bullets.length=0;particles.forEach(p=>scene.remove(p));particles.length=0;hp=100;ownedWeapons=new Set([0]);rateLevel=0;wave=1;coins=0;kills=0;level=1;damage=18;fireRate=.3;lastShot=0;targetX=0;player.position.x=0;equipWeapon(0);updateHUD();beginWave()}$('start').onclick=()=>{hardMode=false;reset()};$('hardStart').onclick=()=>{hardMode=true;reset()};const moveRay=new THREE.Raycaster(), movePlane=new THREE.Plane(new THREE.Vector3(0,1,0),0), movePoint=new THREE.Vector3();
+let dragStartX=0, dragWorldX=0;
+function pointer(e){
+  moveRay.setFromCamera(new THREE.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);
+  if(moveRay.ray.intersectPlane(movePlane,movePoint)){
+    if(e.type==='pointerdown'){dragStartX=movePoint.x;dragWorldX=player.position.x;}
+    targetX=THREE.MathUtils.clamp(dragWorldX+movePoint.x-dragStartX,-5.4,5.4);
+  }
+}renderer.domElement.addEventListener('pointerdown',e=>{dragging=true;pointer(e)});window.addEventListener('pointermove',e=>{if(dragging)pointer(e)});window.addEventListener('pointerup',()=>dragging=false);window.addEventListener('pointercancel',()=>dragging=false);window.addEventListener('blur',()=>dragging=false);window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});function clearHostileShots(){
   for(const shot of hostileShots){scene.remove(shot);shot.geometry.dispose();}
   hostileShots.length=0;
 }
@@ -935,11 +971,11 @@ function updateEnemyAction(enemy,dt){
 }
 function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);elapsed+=dt;updateHitFlash(player,dt);if(playing){tickObstacles(dt);player.position.x=THREE.MathUtils.damp(player.position.x,targetX,9,dt);player.rotation.z=Math.sin(elapsed*7)*.015;spawnTimer-=dt;if(spawned<toSpawn&&spawnTimer<=0&&(hardMode||wave!==1||enemies.length===0)){makeEnemy();const gap=(!hardMode||wave>=6)?openingWaves[wave]?.[spawned]?.gap:null;spawned++;spawnTimer=wave%5===0&&spawned===toSpawn-1?2:(gap??Math.max(.28,1.15-wave*.04));updateBossHud()}lastShot+=dt;if(lastShot>=fireRate){lastShot=0;fire()}for(const e of enemies.slice()){updateHitFlash(e,dt);updateEnemyAction(e,dt);e.userData.legs?.forEach((leg,i)=>{leg.rotation.x=Math.sin(elapsed*e.userData.speed*3+e.userData.phase)*(i===0||i===3?.42:-.42)});e.rotation.z=Math.sin(elapsed*(e.userData.runner?12:5)+e.userData.phase)*.045;if(e.position.z>4.65){waveStats.baseDamage+=Math.min(hp,e.userData.attack);hp=Math.max(0,hp-e.userData.attack);showHurt('baseStat');effect(160,48,.23,.09);burst(e.position.x,1,4.6,0xff6c6c);removeEnemy(e);updateHUD();if(hp<=0){showPanel('💀 방어선 붕괴',`<b>${wave} 웨이브</b>까지 도전!<br>좀비 ${kills}마리를 처치했습니다.`,defeatOptions());break}}}for(const b of playing?bullets.slice():[]){const previous=b.position.clone();b.position.addScaledVector(b.userData.vel,dt);b.userData.life-=dt;let hit=null;for(const e of enemies){const pos=e.position.clone().add(new THREE.Vector3(0,e.userData.hitHeight??(e.userData.big?3.64:1.65),0));const segment=b.position.clone().sub(previous);const len2=segment.lengthSq();const t=len2?THREE.MathUtils.clamp(pos.clone().sub(previous).dot(segment)/len2,0,1):0;const closest=previous.clone().addScaledVector(segment,t);if(closest.distanceTo(pos)<(e.userData.hitRadius??(e.userData.big?2.379:.85))){hit=e;break}}if(hit) damageEnemy(hit,b.userData.damage,b.position);if(hit||b.userData.life<=0||b.position.z< -90){scene.remove(b);bullets.splice(bullets.indexOf(b),1)}}if(playing)updateHostileShots(dt);if(spawned>=toSpawn&&enemies.length===0&&playing)nextShop()}for(const p of particles.slice()){p.userData.life-=dt;p.position.addScaledVector(p.userData.vel,dt);p.userData.vel.y-=dt*8;p.scale.multiplyScalar(.93);if(p.userData.life<=0){scene.remove(p);particles.splice(particles.indexOf(p),1)}}const combatView=playing;
 const narrow=camera.aspect<.7;
-const cameraX=combatView?player.position.x+.52:player.position.x*.35;
-const cameraY=combatView?3.15:9.7;
-const cameraZ=combatView?player.position.z+(narrow?5.15:4.85):14.5;
+const cameraX=narrow?9:17;
+const cameraY=narrow?25:22;
+const cameraZ=narrow?24:20;
 camera.position.lerp(new THREE.Vector3(cameraX,cameraY,cameraZ),combatView?.17:.07);
-camera.lookAt(player.position.x*.25,combatView?3.3:1,-14);aimLine.visible=playing;aimLine.position.set(player.position.x+gripOrigin.x,0,player.position.z+gripOrigin.z-.93*gun.scale.z);tail.rotation.z=Math.sin(elapsed*4)*.065+(targetX-player.position.x)*.065;const lateralVelocity=playing?(player.position.x-previousAvatarX)/Math.max(dt,.001):0;
+camera.lookAt(0,0,narrow?-10:-13);aimLine.visible=playing;aimLine.position.set(player.position.x+gripOrigin.x,0,player.position.z+gripOrigin.z-.93*gun.scale.z);tail.rotation.z=Math.sin(elapsed*4)*.065+(targetX-player.position.x)*.065;const lateralVelocity=playing?(player.position.x-previousAvatarX)/Math.max(dt,.001):0;
 previousAvatarX=player.position.x;
 if(femaleWalk&&femaleGlb.visible){
   const speed=Math.abs(lateralVelocity);
@@ -1093,11 +1129,47 @@ for(const z of [-7,-24,-41]){
 const pilotFill=new THREE.DirectionalLight(0x8cc9e2,.8);
 pilotFill.position.set(7,8,-12);designPilot.add(pilotFill);
 function updateDesignPilot(){
-  const active=wave===1;
+  const active=true;
   if(designPilot.visible!==active)designPilot.visible=active;
   if(!active)return;
   // Keep gameplay camera and collision unchanged during first visual trial.
   pilotFill.intensity=playing?.8:.45;
 }
+
+
+// Shared environment palette and deterministic road detail across every wave.
+scene.background=new THREE.Color(0x222937);
+scene.fog=new THREE.Fog(0x222937,42,100);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.05;
+road.color.setHex(0x343a44);grass.color.setHex(0x343f3d);stripe.color.setHex(0x9d9583);
+sun.color.setHex(0xffc38b);sun.intensity=2.4;sun.position.set(-12,20,8);
+const detailCanvas=document.createElement('canvas');detailCanvas.width=detailCanvas.height=512;
+const ink=detailCanvas.getContext('2d');let seed=5721;
+function artRandom(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+ink.fillStyle='#454953';ink.fillRect(0,0,512,512);
+for(let i=0;i<18000;i++){const v=40+artRandom()*65;ink.fillStyle=`rgba(${v},${v},${v},.3)`;ink.fillRect(artRandom()*512,artRandom()*512,1+artRandom()*3,1);}
+ink.strokeStyle='#22262c';ink.lineWidth=2;
+for(let i=0;i<22;i++){let x=artRandom()*512,y=artRandom()*512;ink.beginPath();ink.moveTo(x,y);for(let j=0;j<5;j++){x+=artRandom()*60-30;y+=artRandom()*60;ink.lineTo(x,y);}ink.stroke();}
+const asphaltTexture=new THREE.CanvasTexture(detailCanvas);asphaltTexture.wrapS=asphaltTexture.wrapT=THREE.RepeatWrapping;asphaltTexture.repeat.set(3,18);asphaltTexture.colorSpace=THREE.SRGBColorSpace;road.map=asphaltTexture;road.needsUpdate=true;
+const rubber=pilotMat(0x151a22), carPaint=pilotMat(0x334552,.3), ivory=pilotMat(0xa8acaa), hazard=pilotMat(0xe6ad42);
+// Sidewalks, roadblocks and abandoned police cars frame the playable lanes.
+for(const side of [-1,1]){
+ pilotBlock(2,.18,84,pilotEdge,side*7.5,.02,-32);
+ for(let z=2;z>-60;z-=9){
+  pilotBlock(1.3,1,.65,pilotConcrete,side*6.6,.5,z);
+  for(let j=0;j<3;j++){const h=pilotBlock(.19,.7,.03,hazard,side*6.6-.45+j*.4,.55,z+.34);h.rotation.z=-.4;}
+ }
+ const car=new THREE.Group();car.position.set(side*8.1,.3,-17-side*6);car.rotation.y=side*.17;designPilot.add(car);
+ pilotBlock(1.8,.65,4,carPaint,0,.7,0,car);pilotBlock(1.6,.65,1.9,ivory,0,1.3,-.1,car);
+ pilotBlock(1.45,.4,.04,rubber,0,1.35,.87,car);
+ for(const x of [-.9,.9])for(const z of [-1.2,1.2]){const tire=new THREE.Mesh(new THREE.CylinderGeometry(.4,.4,.22,12),rubber);tire.rotation.z=Math.PI/2;tire.position.set(x,.4,z);car.add(tire);}
+ pilotBlock(.5,.13,.23,pilotMat(0xc7473e),-.3,1.7,0,car);pilotBlock(.5,.13,.23,pilotMat(0x4967bb),.3,1.7,0,car);
+ for(const z of [-4,-30]){
+  pilotBlock(.12,4,.12,pilotRust,side*7.4,2,z);
+  pilotBlock(1.2,.65,.22,pilotWindow,side*7.4,4,z);
+ }
+}
+const campLight=new THREE.PointLight(0xffb75e,15,17,2);campLight.position.set(-5,4,4);scene.add(campLight);
 
 updateHUD();loop();</script></body></html>
