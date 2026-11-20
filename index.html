@@ -139,6 +139,34 @@ let recoil=0, flinch=0, swap=0, deploy=0, brace=0, previousVelocity=0;
 function resetCombatMotion(){
   recoil=flinch=swap=deploy=brace=previousVelocity=0;
 }
+// Wave-1 character art pass: lightweight, reversible presentation only.
+const femaleArtGroup=new THREE.Group();
+player.add(femaleArtGroup);
+const femaleGroundGlow=new THREE.Mesh(
+  new THREE.CircleGeometry(.66,36),
+  new THREE.MeshBasicMaterial({color:0x75c69c,transparent:true,opacity:.16,depthWrite:false,side:THREE.DoubleSide})
+);
+femaleGroundGlow.rotation.x=-Math.PI/2;
+femaleGroundGlow.position.y=.035;
+femaleArtGroup.add(femaleGroundGlow);
+const femaleGroundRing=new THREE.Mesh(
+  new THREE.RingGeometry(.65,.69,40),
+  new THREE.MeshBasicMaterial({color:0x91e6ac,transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide})
+);
+femaleGroundRing.rotation.x=-Math.PI/2;
+femaleGroundRing.position.y=.04;
+femaleArtGroup.add(femaleGroundRing);
+const femaleRimLight=new THREE.PointLight(0xa6cfff,.7,4.8,2);
+femaleRimLight.position.set(-.75,2.35,.85);
+femaleArtGroup.add(femaleRimLight);
+function updateFemaleArtPass(){
+  const active=avatar==='female'&&wave===1;
+  femaleArtGroup.visible=active;
+  if(active){
+    femaleGroundGlow.material.opacity=.13+Math.sin(elapsed*2.4)*.025;
+    femaleRimLight.intensity=playing?.72:.4;
+  }
+}
 let loadingFemale=false;
 async function loadFemale(){
   if(femaleGlb||loadingFemale)return;
@@ -151,7 +179,20 @@ async function loadFemale(){
     model.scale.setScalar(1.36);
     model.position.x=.22;
     model.position.z=-.08;
-    model.traverse(part=>{if(part.isMesh){part.castShadow=true;part.receiveShadow=true}});
+    model.traverse(part=>{if(part.isMesh){
+      part.castShadow=true;part.receiveShadow=true;
+      // Preserve original colors/textures while giving the 2.5D hero crisp matte highlights.
+      if(part.material){
+        const materials=Array.isArray(part.material)?part.material:[part.material];
+        for(const m of materials){
+          if(m.isMeshStandardMaterial||m.isMeshPhysicalMaterial){
+            m.roughness=Math.max(.63,m.roughness??.7);
+            m.metalness=Math.min(.3,m.metalness??0);
+            m.needsUpdate=true;
+          }
+        }
+      }
+    }});
     if(asset.animations.length){
       femaleMixer=new THREE.AnimationMixer(model);
       femaleWalk=femaleMixer.clipAction(asset.animations[0]);
@@ -933,7 +974,7 @@ swap=THREE.MathUtils.damp(swap,0,14,dt);
 deploy=THREE.MathUtils.damp(deploy,0,8,dt);
 brace=THREE.MathUtils.damp(brace,0,7,dt);
 if(!femaleGlb?.visible){gun.position.copy(gripOrigin);gun.rotation.set(0,0,0);}
-updateDesignPilot();renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
+updateDesignPilot();updateFemaleArtPass();renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
 const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
   if(bossTest)return;
