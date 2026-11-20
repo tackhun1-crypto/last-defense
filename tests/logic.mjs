@@ -64,6 +64,15 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  flinch=0;deploy=1;updateIllustratedActors(0);
  assert.equal(heroSprite.material.map,actorFrames['male-winter-deploy']);
  playing=false;deploy=0;
+ for(const season of ['casual-summer','casual-winter']){
+   selectOutfit(season);
+   for(const img of outfitAtlases[season])img.onload();
+   for(const [avatarId,actor] of [['female','hero'],['male','male']]){
+     selectAvatar(avatarId);updateIllustratedActors(0);
+     assert.equal(heroSprite.material.map,actorFrames[actor+'-'+season+'-ready']);
+     for(const pose of outfitPoses)assert.ok(actorFrames[actor+'-'+season+'-'+pose]);
+   }
+ }
  selectOutfit(undefined);assert.equal(outfit,'standard');
  selectAvatar('female');selectOutfit('standard');
  assert.equal(illustratedStreet.visible,false);
@@ -114,7 +123,7 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  $('itemsDialog').close();
  for(let i=0;i<weapons.length;i++){ownedWeapons.add(i);equipWeapon(i);assert.ok(damage>0);assert.ok(fireRate>0);}
- selectOutfit('summer');saveCheckpoint();const cp=loadCheckpoint();assert.ok(cp);assert.equal(cp.wave,1);assert.equal(cp.outfit,'summer');
+ selectOutfit('casual-winter');saveCheckpoint();const cp=loadCheckpoint();assert.ok(cp);assert.equal(cp.wave,1);assert.equal(cp.outfit,'casual-winter');
  for(const number of [5,10]){enemies.slice().forEach(removeEnemy);wave=number;spawned=toSpawn-1;makeEnemy();assert.equal(enemies.filter(e=>e.userData.big).length,number===10?3:1);updateDesignPilot();assert.equal(designPilot.visible,true);
  updateIllustratedActors(0);
  const boss=enemies.find(e=>e.userData.chief)||enemies.find(e=>e.userData.big);
@@ -143,7 +152,7 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  walker.userData.walkDistance=.39;updateIllustratedActors(0);
  assert.equal(walker.userData.artSprite.material.map,actorFrames['infected-walk-1']);
  restoreCheckpoint(cp);
- assert.equal(outfit,'summer');
+ assert.equal(outfit,'casual-winter');
  selectOutfit('standard');
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  beginWave();

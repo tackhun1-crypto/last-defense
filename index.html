@@ -152,6 +152,10 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
 #avatarChoices[data-outfit=summer] [data-avatar=male] .avatar-art{background-image:url("./assets/outfit-male-summer.webp")}
 #avatarChoices[data-outfit=winter] [data-avatar=female] .avatar-art{background-image:url("./assets/outfit-hero-winter.webp")}
 #avatarChoices[data-outfit=winter] [data-avatar=male] .avatar-art{background-image:url("./assets/outfit-male-winter.webp")}
+#avatarChoices[data-outfit=casual-summer] [data-avatar=female] .avatar-art{background-image:url("./assets/outfit-hero-casual-summer.webp")}
+#avatarChoices[data-outfit=casual-summer] [data-avatar=male] .avatar-art{background-image:url("./assets/outfit-male-casual-summer.webp")}
+#avatarChoices[data-outfit=casual-winter] [data-avatar=female] .avatar-art{background-image:url("./assets/outfit-hero-casual-winter.webp")}
+#avatarChoices[data-outfit=casual-winter] [data-avatar=male] .avatar-art{background-image:url("./assets/outfit-male-casual-winter.webp")}
 #avatarChoices:not([data-outfit=standard]) .avatar-art{background-size:400% 200%}
 </style></head><body><div id="hud"><div id="top" aria-label="전투 현황">
   <div class="hud-brand" aria-hidden="true">LAST<strong>DEFENSE</strong></div>
@@ -175,8 +179,10 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
   </div>
 </div><div id="damage" aria-hidden="true"></div><div id="battleDock"><span id="bossStatus" class="a11y-only" role="status"></span><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" data-outfit="standard" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true"><span class="avatar-art" aria-hidden="true"></span>남성 생존자</button><button type="button" data-avatar="female" aria-pressed="false"><span class="avatar-art" aria-hidden="true"></span>여성 생존자</button></div><div id="outfitChoices" role="group" aria-label="생존자 복장">
   <button type="button" data-outfit-choice="standard" aria-pressed="true">전술복</button>
-  <button type="button" data-outfit-choice="summer" aria-pressed="false">여름복</button>
-  <button type="button" data-outfit-choice="winter" aria-pressed="false">겨울복</button>
+  <button type="button" data-outfit-choice="summer" aria-pressed="false">여름 아웃도어</button>
+  <button type="button" data-outfit-choice="winter" aria-pressed="false">겨울 아웃도어</button>
+  <button type="button" data-outfit-choice="casual-summer" aria-pressed="false">여름 일상복</button>
+  <button type="button" data-outfit-choice="casual-winter" aria-pressed="false">겨울 일상복</button>
 </div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
@@ -1614,7 +1620,9 @@ const actorAtlasImages=atlasManifest.map(([url,frames])=>{
 });
 const outfitSources={
   summer:[['hero','./assets/outfit-hero-summer.webp'],['male','./assets/outfit-male-summer.webp']],
-  winter:[['hero','./assets/outfit-hero-winter.webp'],['male','./assets/outfit-male-winter.webp']]
+  winter:[['hero','./assets/outfit-hero-winter.webp'],['male','./assets/outfit-male-winter.webp']],
+  'casual-summer':[['hero','./assets/outfit-hero-casual-summer.webp'],['male','./assets/outfit-male-casual-summer.webp']],
+  'casual-winter':[['hero','./assets/outfit-hero-casual-winter.webp'],['male','./assets/outfit-male-casual-winter.webp']]
 };
 const outfitPoses=['ready','step-a','step-b','fire','swap','hit','deploy','brace'];
 const outfitAtlases=Object.create(null);
@@ -1796,7 +1804,27 @@ const muzzleAnchors={
   'male-winter-step-a':[0.889,0.826],
   'male-winter-step-b':[0.891,0.822],
   'male-winter-fire':[0.797,0.83],
-  'male-winter-brace':[0.953,0.715]
+  'male-winter-brace':[0.953,0.715],
+  'hero-casual-summer-ready':[0.881,0.749],
+  'hero-casual-summer-step-a':[0.891,0.75],
+  'hero-casual-summer-step-b':[0.895,0.748],
+  'hero-casual-summer-fire':[0.832,0.637],
+  'hero-casual-summer-brace':[0.953,0.678],
+  'male-casual-summer-ready':[0.953,0.785],
+  'male-casual-summer-step-a':[0.893,0.801],
+  'male-casual-summer-step-b':[0.895,0.822],
+  'male-casual-summer-fire':[0.775,0.832],
+  'male-casual-summer-brace':[0.953,0.764],
+  'hero-casual-winter-ready':[0.838,0.76],
+  'hero-casual-winter-step-a':[0.82,0.756],
+  'hero-casual-winter-step-b':[0.811,0.734],
+  'hero-casual-winter-fire':[0.732,0.754],
+  'hero-casual-winter-brace':[0.869,0.694],
+  'male-casual-winter-ready':[0.947,0.826],
+  'male-casual-winter-step-a':[0.914,0.816],
+  'male-casual-winter-step-b':[0.881,0.811],
+  'male-casual-winter-fire':[0.811,0.848],
+  'male-casual-winter-brace':[0.953,0.67]
 };
 
 updateHUD();loop();</script></body></html>

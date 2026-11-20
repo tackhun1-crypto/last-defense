@@ -96,3 +96,9 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 
 - The start screen offers original tactical clothing, summer trail gear and winter expedition clothing for both survivors. The models remain cosmetic and share the same stats.
 - Each seasonal atlas includes all eight combat and reaction poses. Atlas loading is deferred until a season is selected and the selected outfit is stored in checkpoints.
+
+## Civilian summer and winter outfits
+
+- Added separate casual summer and winter outfits for both survivors alongside the tactical and outdoor choices.
+- Outfit previews use the combat art. All eight poses per outfit stay in civilian clothing, and the chosen outfit persists in a saved run.
+- Tests exercise both new choices and avatars, complete frame registration, and restoration through the existing checkpoint flow.
