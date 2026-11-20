@@ -44,6 +44,28 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal($('survivorPortrait').dataset.avatar,'female');
  selectAvatar('male');assert.equal($('survivorPortrait').dataset.avatar,'male');
  selectAvatar('female');
+ selectOutfit('summer');
+ assert.equal($('avatarChoices').dataset.outfit,'summer');
+ assert.equal(outfitAtlases.summer.length,2);
+ const firstSummerAtlas=outfitAtlases.summer[0];
+ selectOutfit('summer');
+ assert.equal(outfitAtlases.summer[0],firstSummerAtlas);
+ for(const img of outfitAtlases.summer)img.onload();
+ updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames['hero-summer-ready']);
+ assert.equal(actorFrames['hero-summer-brace'].offset.x,.75);
+ assert.equal(actorFrames['hero-summer-brace'].offset.y,0);
+ selectOutfit('winter');
+ for(const img of outfitAtlases.winter)img.onload();
+ selectAvatar('male');updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames['male-winter-ready']);
+ playing=true;flinch=1;updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames['male-winter-hit']);
+ flinch=0;deploy=1;updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames['male-winter-deploy']);
+ playing=false;deploy=0;
+ selectOutfit(undefined);assert.equal(outfit,'standard');
+ selectAvatar('female');selectOutfit('standard');
  assert.equal(illustratedStreet.visible,false);
  streetArt.onload();
  assert.equal(illustratedStreet.visible,true);
@@ -92,7 +114,7 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  $('itemsDialog').close();
  for(let i=0;i<weapons.length;i++){ownedWeapons.add(i);equipWeapon(i);assert.ok(damage>0);assert.ok(fireRate>0);}
- saveCheckpoint();const cp=loadCheckpoint();assert.ok(cp);assert.equal(cp.wave,1);
+ selectOutfit('summer');saveCheckpoint();const cp=loadCheckpoint();assert.ok(cp);assert.equal(cp.wave,1);assert.equal(cp.outfit,'summer');
  for(const number of [5,10]){enemies.slice().forEach(removeEnemy);wave=number;spawned=toSpawn-1;makeEnemy();assert.equal(enemies.filter(e=>e.userData.big).length,number===10?3:1);updateDesignPilot();assert.equal(designPilot.visible,true);
  updateIllustratedActors(0);
  const boss=enemies.find(e=>e.userData.chief)||enemies.find(e=>e.userData.big);
@@ -121,6 +143,8 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  walker.userData.walkDistance=.39;updateIllustratedActors(0);
  assert.equal(walker.userData.artSprite.material.map,actorFrames['infected-walk-1']);
  restoreCheckpoint(cp);
+ assert.equal(outfit,'summer');
+ selectOutfit('standard');
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  beginWave();
  for(const kind of ['barrier','mat']){

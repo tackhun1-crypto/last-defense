@@ -137,6 +137,22 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
   .avatar-art{width:68px}
   #avatarChoices button{min-height:82px}
 }
+
+#outfitChoices{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px
+}
+#outfitChoices button{
+  min-width:0;margin:0;padding:6px 3px;min-height:44px;
+  color:#f5f1ec;background:#292e33;border:1px solid #77736c;font-size:12px;
+}
+#outfitChoices button[aria-pressed=true]{
+  color:#fff0d1;border-color:#e6b36b;background:#583e30;
+}
+#avatarChoices[data-outfit=summer] [data-avatar=female] .avatar-art{background-image:url("./assets/outfit-hero-summer.webp")}
+#avatarChoices[data-outfit=summer] [data-avatar=male] .avatar-art{background-image:url("./assets/outfit-male-summer.webp")}
+#avatarChoices[data-outfit=winter] [data-avatar=female] .avatar-art{background-image:url("./assets/outfit-hero-winter.webp")}
+#avatarChoices[data-outfit=winter] [data-avatar=male] .avatar-art{background-image:url("./assets/outfit-male-winter.webp")}
+#avatarChoices:not([data-outfit=standard]) .avatar-art{background-size:400% 200%}
 </style></head><body><div id="hud"><div id="top" aria-label="전투 현황">
   <div class="hud-brand" aria-hidden="true">LAST<strong>DEFENSE</strong></div>
   <div class="pill health-hud">
@@ -157,7 +173,11 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
     <div><span class="hud-gold" aria-hidden="true">G</span> <b id="coins" aria-label="보유 골드">0</b></div>
     <div><span class="hud-label">무기 Lv.</span> <b id="level">1</b></div>
   </div>
-</div><div id="damage" aria-hidden="true"></div><div id="battleDock"><span id="bossStatus" class="a11y-only" role="status"></span><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true"><span class="avatar-art" aria-hidden="true"></span>남성 생존자</button><button type="button" data-avatar="female" aria-pressed="false"><span class="avatar-art" aria-hidden="true"></span>여성 생존자</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
+</div><div id="damage" aria-hidden="true"></div><div id="battleDock"><span id="bossStatus" class="a11y-only" role="status"></span><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" data-outfit="standard" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true"><span class="avatar-art" aria-hidden="true"></span>남성 생존자</button><button type="button" data-avatar="female" aria-pressed="false"><span class="avatar-art" aria-hidden="true"></span>여성 생존자</button></div><div id="outfitChoices" role="group" aria-label="생존자 복장">
+  <button type="button" data-outfit-choice="standard" aria-pressed="true">전술복</button>
+  <button type="button" data-outfit-choice="summer" aria-pressed="false">여름복</button>
+  <button type="button" data-outfit-choice="winter" aria-pressed="false">겨울복</button>
+</div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
 try {
@@ -275,7 +295,7 @@ for(const part of maleSurvivor.children){
 const shortHair=maleSurvivor.children.find(part=>part.material===hair);
 shortHair.scale.y*=.63;
 shortHair.position.y+=.13;
-let avatar="male";
+let avatar="male",outfit="standard";
 let femaleGlb=null;
 const gripInverse=new THREE.Matrix4();
 const gripDelta=new THREE.Matrix4();
@@ -1287,7 +1307,7 @@ const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
   if(bossTest)return;
   const snapshot=JSON.stringify({
-      hardMode,wave,hp,playerHp,coins,kills,weaponIndex,avatar,waveStats,
+      hardMode,wave,hp,playerHp,coins,kills,weaponIndex,avatar,outfit,waveStats,
       owned:[...ownedWeapons],upgrades:weaponUpgrades,inventoryItems
   });
   latestCheckpoint=JSON.parse(snapshot);
@@ -1354,6 +1374,7 @@ function restoreCheckpoint(checkpoint){
     const stats=checkpoint.waveStats;
     waveStats=stats&&['baseDamage','playerHits','blocked','charges'].every(k=>Number.isSafeInteger(stats[k])&&stats[k]>=0)?{...stats}:null;
     selectAvatar(checkpoint.avatar);
+    selectOutfit(checkpoint.outfit);
     ({hardMode,wave,hp,playerHp,coins,kills}=checkpoint);
     inventoryItems={};
     for(const kind of Object.keys(obstacles)){
@@ -1566,7 +1587,7 @@ const atlasManifest=[
   ['./assets/actors-hero-actions.webp',['hero-swap','hero-hit','hero-deploy','hero-brace']],
   ['./assets/actors-male-actions.webp',['male-swap','male-hit','male-deploy','male-brace']]
 ];
-function loadActorAtlas(url,frames,playerArt=false){
+function loadActorAtlas(url,frames,playerArt=false,columns=2){
   const img=document.createElement('img');
   img.onload=()=>{
     const atlas=new THREE.Texture(img);
@@ -1575,10 +1596,11 @@ function loadActorAtlas(url,frames,playerArt=false){
     atlas.minFilter=playerArt?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;
     // The square player cells reserve transparent gutters around every silhouette.
     atlas.userData.aspect=playerArt?1:320/384;
+    const rows=frames.length/columns;
     frames.forEach((key,i)=>{
       const frame=i===0?atlas:atlas.clone();
-      frame.repeat.set(.5,.5);
-      frame.offset.set((i%2)*.5,i<2?.5:0);
+      frame.repeat.set(1/columns,1/rows);
+      frame.offset.set((i%columns)/columns,1-(Math.floor(i/columns)+1)/rows);
       frame.needsUpdate=true;
       actorFrames[key]=frame;
     });
@@ -1589,6 +1611,28 @@ function loadActorAtlas(url,frames,playerArt=false){
 const actorAtlasImages=atlasManifest.map(([url,frames])=>{
   const playerArt=/^(hero|male)-/.test(frames[0]);
   return loadActorAtlas(url,frames,playerArt);
+});
+const outfitSources={
+  summer:[['hero','./assets/outfit-hero-summer.webp'],['male','./assets/outfit-male-summer.webp']],
+  winter:[['hero','./assets/outfit-hero-winter.webp'],['male','./assets/outfit-male-winter.webp']]
+};
+const outfitPoses=['ready','step-a','step-b','fire','swap','hit','deploy','brace'];
+const outfitAtlases=Object.create(null);
+function selectOutfit(value){
+  outfit=Object.hasOwn(outfitSources,value)?value:'standard';
+  const picker=$('avatarChoices');
+  if(picker)picker.dataset.outfit=outfit;
+  document.querySelectorAll('[data-outfit-choice]').forEach(button=>{
+    button.setAttribute('aria-pressed',String(button.dataset.outfitChoice===outfit));
+  });
+  if(outfit==='standard'||outfitAtlases[outfit])return;
+  const season=outfit;
+  outfitAtlases[season]=outfitSources[season].map(([actor,url])=>
+    loadActorAtlas(url,outfitPoses.map(pose=>actor+'-'+season+'-'+pose),true,4)
+  );
+}
+document.querySelectorAll('[data-outfit-choice]').forEach(button=>{
+  button.onclick=()=>selectOutfit(button.dataset.outfitChoice);
 });
 function newPaintedActor(){
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({alphaTest:.27,depthWrite:true,toneMapped:false}));
@@ -1634,13 +1678,15 @@ function updateIllustratedActors(lateralVelocity,dt=0){
     if(speed>.48)action=heroStride<Math.PI?'step-a':'step-b';
     else if(muzzleTime>0)action='fire';
   }
-  const ready=actor+'-ready';
-  const normalPose=actor+'-'+action;
+  const equipped=outfit==='standard'?actor:actor+'-'+outfit;
+  const ready=equipped+'-ready';
+  const normalPose=equipped+'-'+action;
   const reaction=flinch>.28?'hit':deploy>.18?'deploy':swap>.22?'swap':brace>.38&&speed<.48?'brace':null;
-  const reactionPose=playing&&reaction?actor+'-'+reaction:null;
-  const pose=[reactionPose,normalPose,ready,female?'hero-ready':'male']
+  const reactionPose=playing&&reaction?equipped+'-'+reaction:null;
+  const fallbackReaction=playing&&reaction&&!actorFrames[ready]?actor+'-'+reaction:null;
+  const pose=[reactionPose,normalPose,ready,fallbackReaction,actor+'-'+action,actor+'-ready',female?'hero-ready':'male']
     .find(key=>key&&actorFrames[key]);
-  const activeReaction=pose&&pose===reactionPose?reaction:null;
+  const activeReaction=pose&&(pose===reactionPose||pose===fallbackReaction)?reaction:null;
   const heroFrame=actorFrames[pose];
   heroSprite.visible=Boolean(heroFrame);
   if(heroFrame){
@@ -1730,7 +1776,27 @@ const muzzleAnchors={
   'male-step-b':[0.93,0.828],
   'male-fire':[0.904,0.875],
   'male-brace':[0.957,0.707],
-  'hero-brace':[0.955,0.678]
+  'hero-brace':[0.955,0.678],
+  'hero-summer-ready':[0.846,0.768],
+  'hero-summer-step-a':[0.848,0.767],
+  'hero-summer-step-b':[0.854,0.767],
+  'hero-summer-fire':[0.801,0.596],
+  'hero-summer-brace':[0.939,0.699],
+  'male-summer-ready':[0.918,0.836],
+  'male-summer-step-a':[0.928,0.836],
+  'male-summer-step-b':[0.883,0.834],
+  'male-summer-fire':[0.756,0.818],
+  'male-summer-brace':[0.961,0.709],
+  'hero-winter-ready':[0.854,0.783],
+  'hero-winter-step-a':[0.863,0.775],
+  'hero-winter-step-b':[0.826,0.775],
+  'hero-winter-fire':[0.793,0.643],
+  'hero-winter-brace':[0.93,0.701],
+  'male-winter-ready':[0.906,0.828],
+  'male-winter-step-a':[0.889,0.826],
+  'male-winter-step-b':[0.891,0.822],
+  'male-winter-fire':[0.797,0.83],
+  'male-winter-brace':[0.953,0.715]
 };
 
 updateHUD();loop();</script></body></html>

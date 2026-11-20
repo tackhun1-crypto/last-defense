@@ -91,3 +91,8 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 
 - The default female survivor now uses the outfit and facial direction from the original combat concept. The gray sleeveless top, black shorts, thigh rig, knee guards, goggles and ponytail carry across all eight normal combat and reaction frames.
 - The selector uses the same world artwork, the portrait follows the reference portrait, and the muzzle overlay was recalibrated for the new silhouette.
+
+## Seasonal outfits
+
+- The start screen offers original tactical clothing, summer trail gear and winter expedition clothing for both survivors. The models remain cosmetic and share the same stats.
+- Each seasonal atlas includes all eight combat and reaction poses. Atlas loading is deferred until a season is selected and the selected outfit is stored in checkpoints.
