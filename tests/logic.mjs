@@ -27,6 +27,16 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  for(const image of actorAtlasImages)image.onload();
  updateIllustratedActors(0);
  assert.equal(heroSprite.material.map,actorFrames['hero-ready']);
+ assert.equal(heroSprite.material.map.generateMipmaps,true);
+ assert.equal(heroSprite.material.map.userData.aspect,1);
+ assert.ok(heroSprite.scale.y>3.25);
+ for(const x of [-5.4,5.4]){
+   player.position.x=x;updateIllustratedActors(0);
+   const right=new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,0);
+   const edge=heroSprite.position.clone().addScaledVector(right,Math.sign(x)*heroSprite.scale.x*.46);
+   assert.ok(Math.abs(edge.project(camera).x)<.98);
+ }
+ player.position.x=0;
  assert.equal(gun.visible,false);
  selectAvatar('male');updateIllustratedActors(0);
  assert.equal(heroSprite.material.map,actorFrames['male-ready']);

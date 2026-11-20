@@ -80,3 +80,9 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Barrier and slow mat meters no longer show a waiting label. The seconds label appears when an enemy activates the obstacle.
 - Added independent weapon-switch, hit, deployment and boss-arrival brace illustrations for both survivors. The crouch eases in and out while the gameplay events retain their existing timing.
 - Viewport logic checks cover the blank and active timer states, item deployment, weapon switch, hit feedback and both survivor selections.
+
+## Player artwork refinement
+
+- Repainted both survivors' eight combat poses at higher source detail. The production atlases use 512 px square cells, a shared foot-contact baseline, and mipmap filtering for clean edges on phones.
+- Increased the combat presentation size while retaining view margins at the left and right movement limits. Added a warm muzzle-light response on the player's artwork.
+- The character picker previews the actual combat artwork. Gameplay collisions, movement, and weapon timing are kept independent of the art size.

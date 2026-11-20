@@ -111,6 +111,32 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
 #battleDock #loadout{position:relative;inset:auto;transform:none}
 @media(max-height:500px){#battleDock{bottom:calc(20px + env(safe-area-inset-bottom))}}
 .a11y-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* Show the equipped survivor at selection size before entering combat. */
+#avatarChoices{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+}
+#avatarChoices button{
+  position:relative;min-width:0;min-height:110px;padding:0 6px 6px;
+  overflow:hidden;display:grid;align-content:end;justify-items:center;
+  color:#f1eeea;background:radial-gradient(ellipse at 52% 64%,#505459,#25292d 70%);
+  border-color:#686966;font-size:12px;
+}
+#avatarChoices button[aria-pressed=true]{
+  color:#fff0d1;background:radial-gradient(ellipse at 52% 64%,#78563a,#2f2828 72%);
+  border-color:#e6b36b;box-shadow:inset 0 0 0 1px #a56c35;
+}
+.avatar-art{
+  display:block;width:clamp(70px,24vw,100px);aspect-ratio:1;
+  background-position:left top;background-size:200% 200%;background-repeat:no-repeat;
+  pointer-events:none;
+}
+[data-avatar=female] .avatar-art{background-image:url("./assets/actors-hero.webp")}
+[data-avatar=male] .avatar-art{background-image:url("./assets/actors-male.webp")}
+@media(max-height:500px) and (orientation:landscape){
+  .avatar-art{width:68px}
+  #avatarChoices button{min-height:82px}
+}
 </style></head><body><div id="hud"><div id="top" aria-label="전투 현황">
   <div class="hud-brand" aria-hidden="true">LAST<strong>DEFENSE</strong></div>
   <div class="pill health-hud">
@@ -131,7 +157,7 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
     <div><span class="hud-gold" aria-hidden="true">G</span> <b id="coins" aria-label="보유 골드">0</b></div>
     <div><span class="hud-label">무기 Lv.</span> <b id="level">1</b></div>
   </div>
-</div><div id="damage" aria-hidden="true"></div><div id="battleDock"><span id="bossStatus" class="a11y-only" role="status"></span><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
+</div><div id="damage" aria-hidden="true"></div><div id="battleDock"><span id="bossStatus" class="a11y-only" role="status"></span><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true"><span class="avatar-art" aria-hidden="true"></span>남성 생존자</button><button type="button" data-avatar="female" aria-pressed="false"><span class="avatar-art" aria-hidden="true"></span>여성 생존자</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
 try {
@@ -1540,13 +1566,15 @@ const atlasManifest=[
   ['./assets/actors-hero-actions.webp',['hero-swap','hero-hit','hero-deploy','hero-brace']],
   ['./assets/actors-male-actions.webp',['male-swap','male-hit','male-deploy','male-brace']]
 ];
-function loadActorAtlas(url,frames){
+function loadActorAtlas(url,frames,playerArt=false){
   const img=document.createElement('img');
   img.onload=()=>{
     const atlas=new THREE.Texture(img);
     atlas.colorSpace=THREE.SRGBColorSpace;
-    atlas.generateMipmaps=false;
-    atlas.minFilter=THREE.LinearFilter;
+    atlas.generateMipmaps=playerArt;
+    atlas.minFilter=playerArt?THREE.LinearMipmapLinearFilter:THREE.LinearFilter;
+    // The square player cells reserve transparent gutters around every silhouette.
+    atlas.userData.aspect=playerArt?1:320/384;
     frames.forEach((key,i)=>{
       const frame=i===0?atlas:atlas.clone();
       frame.repeat.set(.5,.5);
@@ -1558,7 +1586,10 @@ function loadActorAtlas(url,frames){
   img.src=url;
   return img;
 }
-const actorAtlasImages=atlasManifest.map(([url,frames])=>loadActorAtlas(url,frames));
+const actorAtlasImages=atlasManifest.map(([url,frames])=>{
+  const playerArt=/^(hero|male)-/.test(frames[0]);
+  return loadActorAtlas(url,frames,playerArt);
+});
 function newPaintedActor(){
   const sprite=new THREE.Sprite(new THREE.SpriteMaterial({alphaTest:.27,depthWrite:true,toneMapped:false}));
   sprite.center.set(.5,.04);
@@ -1566,6 +1597,7 @@ function newPaintedActor(){
   return sprite;
 }
 const heroSprite=newPaintedActor();
+heroSprite.center.y=21/512;
 heroSprite.visible=false;
 const paintedMuzzle=new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false}));
 paintedMuzzle.visible=false;
@@ -1588,7 +1620,7 @@ function applyPaintedFrame(sprite,frame,height){
     sprite.material.map=frame;
     sprite.material.needsUpdate=true;
   }
-  sprite.scale.set(height*320/384,height,1);
+  sprite.scale.set(height*(frame.userData.aspect??320/384),height,1);
 }
 function updateIllustratedActors(lateralVelocity,dt=0){
   actorScreenUp.setFromMatrixColumn(camera.matrixWorld,1);
@@ -1614,7 +1646,8 @@ function updateIllustratedActors(lateralVelocity,dt=0){
   if(heroFrame){
     const scale=activeReaction==='deploy'?.77:activeReaction==='brace'?.93:1;
     heroPoseHeight=THREE.MathUtils.damp(heroPoseHeight,scale,24,dt);
-    applyPaintedFrame(heroSprite,heroFrame,(female?3.04:3.24)*heroPoseHeight);
+    const scaleAtEdges=1-.045*Math.pow(Math.min(1,Math.abs(player.position.x)/5.4),2);
+    applyPaintedFrame(heroSprite,heroFrame,(female?3.31:3.48)*heroPoseHeight*scaleAtEdges);
     heroSprite.position.copy(player.position);
     const strideLift=activeReaction?0:heroGaitWeight*Math.abs(Math.sin(heroStride))*.046;
     const breathing=activeReaction||speed>.48?0:Math.sin(elapsed*2.5)*.013;
@@ -1622,6 +1655,11 @@ function updateIllustratedActors(lateralVelocity,dt=0){
     const reactionLean=activeReaction==='hit'?flinch*.075:activeReaction==='swap'?-swap*.049:0;
     heroSprite.material.rotation=-Math.min(.05,recoil*.9)+heroGaitWeight*Math.sin(heroStride)*.024+reactionLean;
     heroSprite.material.color.setHex(flinch>.55?0xffd1c6:0xffffff);
+    if(muzzleTime>0&&(!activeReaction||activeReaction==='brace')){
+      const shotLight=muzzleTime/.075;
+      heroSprite.material.color.r+=shotLight*.13;
+      heroSprite.material.color.g+=shotLight*.07;
+    }
     survivor.visible=maleSurvivor.visible=false;
     if(femaleGlb)femaleGlb.visible=false;
   }else{
@@ -1635,7 +1673,7 @@ function updateIllustratedActors(lateralVelocity,dt=0){
   if(paintedMuzzle.visible){
     const [mx,my]=muzzleAnchors[pose]??muzzleAnchors['hero-ready'];
     actorScreenRight.setFromMatrixColumn(camera.matrixWorld,0);
-    const dx=(mx-.5)*heroSprite.scale.x,dy=(my-.04)*heroSprite.scale.y;
+    const dx=(mx-heroSprite.center.x)*heroSprite.scale.x,dy=(my-heroSprite.center.y)*heroSprite.scale.y;
     const angle=heroSprite.material.rotation;
     paintedMuzzle.position.copy(heroSprite.position)
       .addScaledVector(actorScreenRight,dx*Math.cos(angle)-dy*Math.sin(angle))
@@ -1682,17 +1720,17 @@ function drawIllustratedEnemy(enemy,fallen){
   }
 }
 const muzzleAnchors={
-  'hero-ready':[.966,.798],
-  'hero-step-a':[.966,.775],
-  'hero-step-b':[.966,.784],
-  'hero-fire':[.906,.845],
+  'hero-ready':[0.879,0.779],
+  'hero-step-a':[0.871,0.782],
+  'hero-step-b':[0.898,0.785],
+  'hero-fire':[0.826,0.846],
   male:[.966,.693],
-  'male-ready':[.969,.714],
-  'male-step-a':[.966,.721],
-  'male-step-b':[.969,.747],
-  'male-fire':[.966,.789],
-  'male-brace':[.969,.708],
-  'hero-brace':[.966,.685]
+  'male-ready':[0.955,0.824],
+  'male-step-a':[0.926,0.824],
+  'male-step-b':[0.93,0.828],
+  'male-fire':[0.904,0.875],
+  'male-brace':[0.957,0.707],
+  'hero-brace':[0.943,0.701]
 };
 
 updateHUD();loop();</script></body></html>
