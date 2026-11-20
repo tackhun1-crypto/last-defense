@@ -29,7 +29,7 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(heroSprite.material.map,actorFrames['hero-ready']);
  assert.equal(gun.visible,false);
  selectAvatar('male');updateIllustratedActors(0);
- assert.equal(heroSprite.material.map,actorFrames.male);
+ assert.equal(heroSprite.material.map,actorFrames['male-ready']);
  selectAvatar('female');
  assert.equal($('survivorPortrait').dataset.avatar,'female');
  selectAvatar('male');assert.equal($('survivorPortrait').dataset.avatar,'male');
@@ -86,7 +86,18 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  for(const number of [5,10]){enemies.slice().forEach(removeEnemy);wave=number;spawned=toSpawn-1;makeEnemy();assert.equal(enemies.filter(e=>e.userData.big).length,number===10?3:1);updateDesignPilot();assert.equal(designPilot.visible,true);
  updateIllustratedActors(0);
  const boss=enemies.find(e=>e.userData.chief)||enemies.find(e=>e.userData.big);
- assert.equal(boss.userData.artSprite.material.map,actorFrames[number===10?'chief':'armored']);}
+ assert.equal(boss.userData.artSprite.material.map,actorFrames[number===10?'chief':'armored']);
+ assert.ok(enemies.filter(enemy=>enemy.userData.big).every(enemy=>!enemy.userData.label));
+ const meter=$(number===10?'bossHp1':'bossBar');
+ const previous=meter.value;
+ damageEnemy(boss,1,boss.position);
+ assert.equal(meter.value,previous-1);
+ if(number===10){
+   const support=enemies.find(enemy=>enemy.userData.bossRole==='left');
+   damageEnemy(support,10000,support.position);
+   assert.equal($('bossHp0').value,0);
+   assert.equal($('bossHp1').value,previous-1);
+ }}
  restoreCheckpoint(cp);
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  beginWave();
@@ -104,6 +115,9 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  updateIllustratedActors(0);
  assert.equal(heroSprite.material.map,actorFrames['hero-fire']);
  assert.equal(paintedMuzzle.visible,true);
+ selectAvatar('male');updateIllustratedActors(0);
+ assert.equal(heroSprite.material.map,actorFrames['male-fire']);
+ selectAvatar('female');
  assert.equal(bullets.at(-1).userData.vel.x,0);
  assert.ok(bullets.at(-1).userData.vel.z<0);
  const hit=new THREE.Mesh(new THREE.BoxGeometry(),hostileMaterial);

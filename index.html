@@ -104,6 +104,23 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
   #bossHud{top:79px}
   #loadout{left:50%;right:auto;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom))}
 }
+
+#battleDock{
+  position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;
+}
+#battleDock #loadout{position:relative;inset:auto;transform:none}
+#battleDock #bossHud{
+  position:relative;inset:auto;transform:none;width:min(350px,calc(100% - 16px));
+  padding:5px 8px;background:#17191fee;border-color:#726071;border-radius:9px;
+  font-size:11px;letter-spacing:.015em;pointer-events:none;
+}
+#bossHud[hidden],#bossTrio[hidden]{display:none}
+#bossHud progress{height:5px;margin:3px 0 0}
+#bossTrio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;text-align:left}
+#bossTrio>div:nth-child(2) progress{accent-color:#ff9860}
+#bossTrio>div:not(:nth-child(2)) progress{accent-color:#d090ee}
+@media(max-height:500px){#battleDock{bottom:calc(20px + env(safe-area-inset-bottom))}}
 </style></head><body><div id="hud"><div id="top" aria-label="전투 현황">
   <div class="hud-brand" aria-hidden="true">LAST<strong>DEFENSE</strong></div>
   <div class="pill health-hud">
@@ -124,7 +141,7 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
     <div><span class="hud-gold" aria-hidden="true">G</span> <b id="coins" aria-label="보유 골드">0</b></div>
     <div><span class="hud-label">무기 Lv.</span> <b id="level">1</b></div>
   </div>
-</div><div id="bossHud" hidden><strong id="bossStatus" role="status"></strong><progress id="bossBar" aria-label="거대 좀비 체력" hidden></progress><div id="bossTrio" hidden><div><span id="bossLabel0">왼쪽</span><progress id="bossHp0" aria-label="왼쪽 보스 체력"></progress></div><div><span id="bossLabel1">중앙</span><progress id="bossHp1" aria-label="중앙 보스 체력"></progress></div><div><span id="bossLabel2">오른쪽</span><progress id="bossHp2" aria-label="오른쪽 보스 체력"></progress></div></div></div><div id="damage" aria-hidden="true"></div><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
+</div><div id="damage" aria-hidden="true"></div><div id="battleDock"><div id="bossHud" hidden><strong id="bossStatus" role="status"></strong><progress id="bossBar" aria-label="거대 좀비 체력" hidden></progress><div id="bossTrio" hidden><div><span id="bossLabel0">왼쪽</span><progress id="bossHp0" aria-label="왼쪽 보스 체력"></progress></div><div><span id="bossLabel1">중앙</span><progress id="bossHp1" aria-label="중앙 보스 체력"></progress></div><div><span id="bossLabel2">오른쪽</span><progress id="bossHp2" aria-label="오른쪽 보스 체력"></progress></div></div></div><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
 try {
@@ -525,7 +542,12 @@ if(big){
   e.userData.core=core;
 }
 e.scale.setScalar(chief?2.68:big?2.145:1);const health=enemyHealth(big?(chief?480:bossRole?290:180+wave*22):(role==='baby'?27:role==='carpenter'?55:40)+wave*10);
-e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};e.userData.label=textSprite(e.userData.hp);e.userData.label.position.set(0,e.userData.labelHeight??(big?4.7:3.15*body),0);e.add(e.userData.label);scene.add(e);e.userData.illustration=chief?'chief':big?'armored':ranged?'ranged':
+e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};if(!big){
+  e.userData.label=textSprite(e.userData.hp);
+  e.userData.label.position.y=e.userData.labelHeight;
+  e.add(e.userData.label);
+}
+scene.add(e);e.userData.illustration=chief?'chief':big?'armored':ranged?'ranged':
   ({police:'police',nurse:'nurse',carpenter:'worker'}[role]??(supportX!==null?'heavy':'infected'));
 e.userData.artHeight=(big?2.43:2.75)*body*e.scale.y;addContactShadow(e,body*e.scale.x*1.85,body*e.scale.x*1.2);enemies.push(e);if(big)updateBossHud()}const animalStats={
   dog:{size:.84,hp:24,speed:4.6,color:0xa66d56,attack:10},
@@ -600,7 +622,7 @@ function showHurt(id){
     hurtTimers.delete(id);
   },260));
 }
-function updateLabel(e){e.remove(e.userData.label);e.userData.label.material.map.dispose();e.userData.label.material.dispose();e.userData.label=textSprite(Math.max(0,Math.ceil(e.userData.hp)));e.userData.label.position.set(0,e.userData.labelHeight??(e.userData.big?4.7:3.15),0);e.add(e.userData.label)}function burst(x,y,z,color=0xffb75b){for(let i=0;i<6;i++){const p=sphere(.06,mat(color,{emissive:color,emissiveIntensity:.5}),x,y,z);p.userData={life:.35,vel:new THREE.Vector3((Math.random()-.5)*5,Math.random()*4,(Math.random()-.5)*5)};particles.push(p)}}function updateBossHud() {
+function updateLabel(e){if(!e.userData.label)return;e.remove(e.userData.label);e.userData.label.material.map.dispose();e.userData.label.material.dispose();e.userData.label=textSprite(Math.max(0,Math.ceil(e.userData.hp)));e.userData.label.position.set(0,e.userData.labelHeight??(e.userData.big?4.7:3.15),0);e.add(e.userData.label)}function burst(x,y,z,color=0xffb75b){for(let i=0;i<6;i++){const p=sphere(.06,mat(color,{emissive:color,emissiveIntensity:.5}),x,y,z);p.userData={life:.35,vel:new THREE.Vector3((Math.random()-.5)*5,Math.random()*4,(Math.random()-.5)*5)};particles.push(p)}}function updateBossHud() {
   const bosses=enemies.filter(enemy=>enemy.userData.big);
   const boss=bosses.find(enemy=>enemy.userData.chief)||bosses[0];
   const warning=wave%5===0 && spawned===toSpawn-1 && spawnTimer>0;
@@ -614,7 +636,7 @@ function updateLabel(e){e.remove(e.userData.label);e.userData.label.material.map
       const data=enemy?.userData;
       const status=!data?' · 전투 종료':data.windup>0?' · 돌진 준비':data.dash>0?' · 돌진':data.stun>0?' · 저지':'';
       const label=$('bossLabel'+i);
-      label.textContent=['왼쪽','중앙','오른쪽'][i]+status;
+      label.textContent=['좌측 서브보스','중앙 보스','우측 서브보스'][i]+status;
       label.classList.toggle('alert',Boolean(data?.windup>0||data?.dash>0));
       const bar=$('bossHp'+i);
       bar.max=data?.maxHp??1;
@@ -968,9 +990,11 @@ function clearRemains(){
 function leaveBody(enemy){
   updateHitFlash(enemy,Infinity);
   const label=enemy.userData.label;
-  enemy.remove(label);
-  label.material.map.dispose();
-  label.material.dispose();
+  if(label){
+    enemy.remove(label);
+    label.material.map.dispose();
+    label.material.dispose();
+  }
   enemy.rotation.set(0,0,Math.PI/2);
   enemy.position.y=.35;
   scene.add(enemy);
@@ -1350,22 +1374,50 @@ function pilotBlock(w,h,d,m,x,y,z,parent=designPilot){
   mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
 }
 const windowGlass=pilotMat(0x263743,.18);
+const concreteTrim=pilotMat(0x78726b);
+const shutterSteel=pilotMat(0x343b40,.24);
+const awningCanvas=pilotMat(0x6c4638);
+function facadeDetail(w,h,d,material,x,y,z){
+  const detail=pilotBlock(w,h,d,material,x,y,z);
+  detail.castShadow=false;
+  return detail;
+}
 for(let z=4;z>-70;z-=12){
   for(const side of [-1,1]){
     const x=side*11.3;
-    const height=5+(Math.abs(z)%3)*1.6;
+    const block=Math.round((4-z)/12);
+    const convertedWarehouse=(block+(side>0?1:0))%3===0;
+    const height=convertedWarehouse?5.45:6.4+(block%3)*.7;
     pilotBlock(5.8,height,8.6,brickWall,x,height/2-.05,z-3.1);
     pilotBlock(6.1,.38,9,pilotEdge,x,height+.05,z-3.1);
     const facadeX=x-side*2.99;
     pilotBlock(.24,.32,8.75,pilotEdge,facadeX,.62,z-3.1);
     pilotBlock(.24,.22,8.75,pilotEdge,facadeX,height-.56,z-3.1);
-    pilotBlock(.19,2.18,1.42,pilotRust,facadeX,1.16,z-.72);
+    if(convertedWarehouse){
+      facadeDetail(.31,2.5,3.05,concreteTrim,facadeX,1.26,z-1.15);
+      facadeDetail(.14,2.2,2.7,shutterSteel,facadeX-side*.22,1.15,z-1.15);
+      for(let slat=1;slat<8;slat++){
+        facadeDetail(.038,.03,2.63,pilotEdge,facadeX-side*.31,.16+slat*.255,z-1.15);
+      }
+      facadeDetail(1,.12,3.6,awningCanvas,facadeX-side*.47,2.6,z-1.15).rotation.z=side*.13;
+    }else{
+      facadeDetail(.28,2.4,1.55,concreteTrim,facadeX,1.19,z-.72);
+      facadeDetail(.13,2.13,1.25,pilotRust,facadeX-side*.2,1.08,z-.72);
+      facadeDetail(.04,.72,.18,shutterSteel,facadeX-side*.29,1.58,z-.72);
+      facadeDetail(.16,2.08,2.56,windowGlass,facadeX,1.24,z-4.7);
+      facadeDetail(.19,2.14,.09,concreteTrim,facadeX-side*.11,1.24,z-4.7);
+      facadeDetail(.85,.13,2.86,awningCanvas,facadeX-side*.38,2.4,z-4.7).rotation.z=side*.16;
+    }
+    facadeDetail(.12,height-.55,.11,shutterSteel,facadeX-side*.13,height*.5,z-6.77);
+    facadeDetail(1.2,.56,1.5,shutterSteel,x-side*1.5,height+.48,z-5.8);
     for(let level=2.52;level<height-1;level+=1.5){
       for(let offset of [-2,0,2]){
         const frame=pilotBlock(.22,.93,1.12,pilotEdge,x-side*3.06,level,z-3.1+offset);
         frame.castShadow=false;
         const glass=pilotBlock(.10,.70,.87,(offset===0&&level<3&&side<0)?pilotWindow:windowGlass,x-side*3.22,level,z-3.1+offset);
         glass.castShadow=false;
+        facadeDetail(.052,.74,.065,shutterSteel,x-side*3.29,level,z-3.1+offset);
+        facadeDetail(.16,.075,1.17,concreteTrim,x-side*3.3,level-.47,z-3.1+offset);
       }
     }
     pilotBlock(1.1,1.1,1.2,pilotRust,side*7.65,.55,z+1);
@@ -1489,7 +1541,8 @@ const atlasManifest=[
   ['./assets/actors-hero.webp',['hero-ready','hero-step-a','hero-step-b','hero-fire']],
   ['./assets/actors-infected.webp',['infected','police','nurse','worker']],
   ['./assets/actors-boss.webp',['armored','chief','ranged','heavy']],
-  ['./assets/actors-animals.webp',['dog','bear','tiger','male']]
+  ['./assets/actors-animals.webp',['dog','bear','tiger','male']],
+  ['./assets/actors-male.webp',['male-ready','male-step-a','male-step-b','male-fire']]
 ];
 function loadActorAtlas(url,frames){
   const img=document.createElement('img');
@@ -1541,15 +1594,19 @@ function applyPaintedFrame(sprite,frame,height){
 }
 function updateIllustratedActors(lateralVelocity){
   const female=avatar==='female';
-  let pose=female?'hero-ready':'male';
-  if(female&&playing){
-    if(muzzleTime>0)pose='hero-fire';
-    else if(Math.abs(lateralVelocity)>.5)pose=Math.floor(elapsed*7)%2?'hero-step-a':'hero-step-b';
+  const actor=female?'hero':'male';
+  let action='ready';
+  if(playing){
+    if(muzzleTime>0)action='fire';
+    else if(Math.abs(lateralVelocity)>.5)action=Math.floor(elapsed*7)%2?'step-a':'step-b';
   }
-  const heroFrame=actorFrames[pose]??actorFrames[female?'hero-ready':'male'];
+  const ready=actor+'-ready';
+  const requested=actor+'-'+action;
+  const pose=actorFrames[requested]?requested:actorFrames[ready]?ready:female?'hero-ready':'male';
+  const heroFrame=actorFrames[pose];
   heroSprite.visible=Boolean(heroFrame);
   if(heroFrame){
-    applyPaintedFrame(heroSprite,heroFrame,3.04);
+    applyPaintedFrame(heroSprite,heroFrame,female?3.04:3.24);
     heroSprite.position.copy(player.position);
     heroSprite.position.y=.09+(playing?Math.sin(elapsed*7)*.017:0);
     heroSprite.material.rotation=-Math.min(.05,recoil*.9);
@@ -1599,11 +1656,15 @@ function drawIllustratedEnemy(enemy,fallen){
   sprite.material.color.setHex(fallen?0x957e79:data.flashTime>0?0xffc0a7:0xf6f0ed);
 }
 const muzzleAnchors={
-  'hero-ready':[.966,.763],
-  'hero-step-a':[.966,.779],
-  'hero-step-b':[.966,.737],
-  'hero-fire':[.919,.867],
-  male:[.966,.693]
+  'hero-ready':[.966,.798],
+  'hero-step-a':[.966,.775],
+  'hero-step-b':[.966,.784],
+  'hero-fire':[.906,.845],
+  male:[.966,.693],
+  'male-ready':[.969,.714],
+  'male-step-a':[.966,.721],
+  'male-step-b':[.969,.747],
+  'male-fire':[.966,.789]
 };
 
 updateHUD();loop();</script></body></html>

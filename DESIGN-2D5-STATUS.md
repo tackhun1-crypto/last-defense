@@ -60,3 +60,10 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Illustrated full-body replacements for both survivors, the ordinary and specialist infected, ranged infected, dog/bear/tiger variants, armored bosses, and the final boss. Sprites are integrated into the 3D scene with depth testing and independent contact shadows.
 - The female survivor selects ready, sidestep, and recoil poses. Enemies use pose motion driven by ground distance, hit tint, and distinct boss charge and casualty poses. Sprites fall back to the existing actor meshes if their art fails to load.
 - Hit bounds, damage, shop behavior, items, and waves remain driven by the existing game. Illustrated survivors carry a drawn weapon silhouette across the reload and equipment states.
+
+## Boss HUD and storefront pass
+
+- Boss health lives in the bottom combat dock with the loadout. Main and side bosses do not create world-space health labels. Wave 10 retains an independent meter for the left guard, central boss and right guard.
+- The city blocks now alternate boarded stores and shuttered warehouses, with entrance trim, window mullions, awnings, drainage pipes and rooftop equipment.
+- Both survivors have independent ready, step and firing poses with calibrated muzzle positions. The male sprite from the animal atlas remains a fallback.
+- Logic checks verify direct boss damage, side-boss defeat, no sprite above any boss, and the male and female combat pose selection.
