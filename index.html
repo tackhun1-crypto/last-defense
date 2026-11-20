@@ -50,7 +50,77 @@ body{font-family:"Inter",system-ui,"Noto Sans KR",sans-serif;background:#102126;
 dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-action:pan-y}
 @media(max-width:480px){.pill{font-size:12px;padding:7px}#top{gap:4px}#health{width:90px}#playerStat{font-size:11px}#loadout{padding:6px}#weaponStats{font-size:12px}#bossHud{top:98px}}
 @media(max-height:500px){#top{padding:6px}.pill{font-size:12px;padding:5px 9px}#loadout{left:auto;right:8px;transform:none;bottom:22px}#bossHud{top:6px;width:32vw}#card{max-height:calc(100dvh - 16px);padding:14px}#description{margin-bottom:5px}#card button{margin-top:6px}}
-</style></head><body><div id="hud"><div id="top"><div class="pill"><div id="baseStat">🛡️ 기지 <span id="hptext">100 / 100</span></div><div id="health"><div id="healthFill"></div></div><div id="playerStat">👤 <span id="playerHp">100</span>/100<span id="playerHit" hidden>−12</span><progress id="playerMeter" max="100" value="100" aria-label="플레이어 체력"></progress></div></div><div class="pill">🌊 웨이브 <span id="wave">1</span><br>💰 <span id="coins">0</span></div><div class="pill">🎯 처치 <span id="kills">0</span><br>🔫 Lv.<span id="level">1</span></div></div><div id="bossHud" hidden><strong id="bossStatus" role="status"></strong><progress id="bossBar" aria-label="거대 좀비 체력" hidden></progress><div id="bossTrio" hidden><div><span id="bossLabel0">왼쪽</span><progress id="bossHp0" aria-label="왼쪽 보스 체력"></progress></div><div><span id="bossLabel1">중앙</span><progress id="bossHp1" aria-label="중앙 보스 체력"></progress></div><div><span id="bossLabel2">오른쪽</span><progress id="bossHp2" aria-label="오른쪽 보스 체력"></progress></div></div></div><div id="damage">-10</div><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST DEFENSE</h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
+
+/* In-game chrome follows the contrast and proportions of the art reference. */
+#top{
+  display:grid;grid-template-columns:auto auto 1fr auto;align-items:start;
+  gap:10px;padding:calc(10px + env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) 6px max(10px,env(safe-area-inset-left));
+}
+.hud-brand{font-size:clamp(19px,2.8vw,38px);line-height:.8;font-weight:950;font-style:italic;letter-spacing:-.09em;text-shadow:2px 3px #08090c;padding:6px 8px 0 2px}
+.hud-brand strong,#panel[data-screen=start] #title strong{display:block;color:#ff5459}
+#top .pill{background:linear-gradient(165deg,#28292bed,#0d0e12f5);border:1px solid #85817a;border-radius:10px;box-shadow:0 3px 10px #000b,inset 0 1px #ffffff24}
+.health-hud{display:flex;align-items:center;gap:7px;min-width:0}
+.health-readouts{min-width:0}
+#survivorPortrait{
+  width:clamp(38px,6vw,70px);aspect-ratio:1;flex:none;border:1px solid #8a847b;border-radius:7px;
+  background:radial-gradient(ellipse at 42% 70%,#695043,#181b24 88%);overflow:hidden;
+}
+#survivorPortrait[data-avatar=female]{background:url("./assets/survivor.webp") center 36%/cover no-repeat,radial-gradient(ellipse at 42% 70%,#695043,#181b24 88%)}
+#survivorPortrait[data-avatar=male]{display:none}
+#baseStat,#playerStat{white-space:nowrap}
+#baseStat span:first-child,#playerStat span:first-child,.hud-label{color:#e0d9cd;font-size:.86em}
+#playerMeter{accent-color:#73d997}
+#health{min-width:76px;width:100%;height:6px;margin-top:3px}
+.wave-hud{justify-self:center;display:flex;gap:10px;white-space:nowrap}
+.wave-hud div+div{border-left:1px solid #81766b99;padding-left:10px}
+.supply-hud{min-width:78px;text-align:right;white-space:nowrap}
+.hud-gold{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;font-size:12px;color:#552500;background:linear-gradient(#fff094,#e69923);box-shadow:inset 0 0 0 1px #fff6bb}
+#loadout{border-color:#8c8275;background:linear-gradient(150deg,#2b2929f5,#12141af2)}
+#weaponSlots button{background:linear-gradient(150deg,#45454b,#1b1b20);border-color:#7f7d7b}
+#weaponSlots button[aria-pressed=true]{background:linear-gradient(160deg,#554331,#1e1b19);border-color:#ffd379;box-shadow:0 0 10px #f8b1427d,inset 0 0 7px #f8b14242}
+#loadout .weapon-icon{background:linear-gradient(160deg,#f5eee1 16%,#b1aa9d 48%,#686664 72%,#dbd1c0)}
+.weapon-slot-name{font-size:9px;line-height:1;max-width:100%;white-space:nowrap;color:#fff4dc}
+#damage{opacity:0;top:0;left:0;transition:none;transform:translate(-50%,-100%);font-style:italic;color:#ffd25c;font-size:clamp(17px,3.4vw,29px);-webkit-text-stroke:1px #201609;pointer-events:none}
+#panel[data-screen=start] #title strong{display:inline}
+#panel[data-screen=start] #card{box-shadow:0 20px 60px #000b,inset 0 1px #ffa56635}
+@media(max-width:580px){
+  #top{grid-template-columns:minmax(0,1fr) auto auto;gap:5px;padding:calc(6px + env(safe-area-inset-top)) 6px 4px}
+  .hud-brand{display:none}
+  #top .pill{padding:6px;font-size:12px}
+  #survivorPortrait{width:34px}
+  .wave-hud{display:grid;gap:2px}
+  .wave-hud div+div{border:0;padding:0}
+  .supply-hud{min-width:60px}
+}
+@media(max-width:360px){
+  #survivorPortrait{width:28px}
+  .health-hud{gap:4px}
+}
+@media(max-height:500px){
+  #bossHud{top:79px}
+  #loadout{left:50%;right:auto;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom))}
+}
+</style></head><body><div id="hud"><div id="top" aria-label="전투 현황">
+  <div class="hud-brand" aria-hidden="true">LAST<strong>DEFENSE</strong></div>
+  <div class="pill health-hud">
+    <div id="survivorPortrait" aria-hidden="true"></div>
+    <div class="health-readouts">
+      <div id="baseStat"><span>기지</span> <b id="hptext">100 / 100</b></div>
+      <div id="health"><div id="healthFill"></div></div>
+      <div id="playerStat"><span>생존자</span> <b id="playerHp">100</b>/100<span id="playerHit" hidden>−12</span>
+        <progress id="playerMeter" max="100" value="100" aria-label="플레이어 체력"></progress>
+      </div>
+    </div>
+  </div>
+  <div class="pill wave-hud">
+    <div><span class="hud-label">웨이브</span> <b id="wave">1</b></div>
+    <div><span class="hud-label">처치</span> <b id="kills">0</b></div>
+  </div>
+  <div class="pill supply-hud">
+    <div><span class="hud-gold" aria-hidden="true">G</span> <b id="coins" aria-label="보유 골드">0</b></div>
+    <div><span class="hud-label">무기 Lv.</span> <b id="level">1</b></div>
+  </div>
+</div><div id="bossHud" hidden><strong id="bossStatus" role="status"></strong><progress id="bossBar" aria-label="거대 좀비 체력" hidden></progress><div id="bossTrio" hidden><div><span id="bossLabel0">왼쪽</span><progress id="bossHp0" aria-label="왼쪽 보스 체력"></progress></div><div><span id="bossLabel1">중앙</span><progress id="bossHp1" aria-label="중앙 보스 체력"></progress></div><div><span id="bossLabel2">오른쪽</span><progress id="bossHp2" aria-label="오른쪽 보스 체력"></progress></div></div></div><div id="damage" aria-hidden="true"></div><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
 try {
@@ -60,7 +130,7 @@ try {
   $('error').style.display='block';
   throw error;
 }renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.prepend(renderer.domElement);scene.add(new THREE.HemisphereLight(0xffffff,0x65736b,2.0));const sun=new THREE.DirectionalLight(0xfff0d6,2.5);sun.position.set(-9,18,12);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-22;sun.shadow.camera.right=22;sun.shadow.camera.top=32;sun.shadow.camera.bottom=-30;scene.add(sun);
-const mat=(color,other={})=>new THREE.MeshStandardMaterial({color,roughness:.82,...other});const road=mat(0x707b86),stripe=mat(0xe5e1ce),grass=mat(0x678e68),wall=mat(0x657a83),skin=mat(0xe6b18b),blue=mat(0x255b87),dark=mat(0x27343d),red=mat(0xa3484b),gold=mat(0xffc05b,{emissive:0xa45412,emissiveIntensity:.3});function box(w,h,d,m,x,y,z,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}function sphere(r,m,x,y,z,parent=scene){const o=new THREE.Mesh(new THREE.SphereGeometry(r,12,9),m);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o}box(55,.15,115,grass,0,-.16,-28);box(13,.08,105,road,0,0,-28);for(let z=4;z>-80;z-=8){box(.13,.025,3.2,stripe,0,.06,z);box(.2,.2,7,wall,-6.65,.08,z-2);box(.2,.2,7,wall,6.65,.08,z-2)}for(let z=-3;z>-82;z-=10){for(let side of [-1,1]){const x=side*(9+Math.random()*5);box(.45,1.8,.45,mat(0x6b5342),x,.9,z);sphere(1.3,mat(0x3d7453),x,2.25,z);sphere(.9,mat(0x518760),x+.7,2.5,z-.3)}}box(13,.4,.8,mat(0x3b4b55),0,.3,5.4);for(let x=-6;x<=6;x+=1.6)box(.12,.9,.5,mat(0xf3bf52),x,.85,5.4);
+const mat=(color,other={})=>new THREE.MeshStandardMaterial({color,roughness:.82,...other});const road=mat(0x707b86),stripe=mat(0xe5e1ce),grass=mat(0x678e68),wall=mat(0x657a83),skin=mat(0xe6b18b),blue=mat(0x255b87),dark=mat(0x27343d),red=mat(0xa3484b),gold=mat(0xffc05b,{emissive:0xa45412,emissiveIntensity:.3});function box(w,h,d,m,x,y,z,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}function sphere(r,m,x,y,z,parent=scene){const o=new THREE.Mesh(new THREE.SphereGeometry(r,12,9),m);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o}box(55,.15,115,grass,0,-.16,-28);box(13,.08,105,road,0,0,-28);const centerMarkings=[];for(let z=4;z>-80;z-=8){centerMarkings.push(box(.13,.025,3.2,stripe,0,.06,z));box(.2,.2,7,wall,-6.65,.08,z-2);box(.2,.2,7,wall,6.65,.08,z-2)}for(let z=-3;z>-82;z-=10){for(let side of [-1,1]){const x=side*(9+Math.random()*5);box(.45,1.8,.45,mat(0x6b5342),x,.9,z);sphere(1.3,mat(0x3d7453),x,2.25,z);sphere(.9,mat(0x518760),x+.7,2.5,z-.3)}}box(13,.4,.8,mat(0x3b4b55),0,.3,5.4);for(let x=-6;x<=6;x+=1.6)box(.12,.9,.5,mat(0xf3bf52),x,.85,5.4);
 const wetHighlights=new THREE.Group();
 wetHighlights.visible=false;
 scene.add(wetHighlights);
@@ -242,6 +312,7 @@ function femaleAsset(){return "Z2xURgIAAAAYGgMAhA4BAEpTT057ImFzc2V0Ijp7ImdlbmVyY
 function selectAvatar(value){
   avatar=value==="female"?"female":"male";
   const female=avatar==="female";
+  $('survivorPortrait').dataset.avatar=avatar;
   survivor.visible=female&&!femaleGlb;
   maleSurvivor.visible=!female;
   if(femaleGlb)femaleGlb.visible=female;
@@ -524,7 +595,30 @@ function updateLabel(e){e.remove(e.userData.label);e.userData.label.material.map
   }
 }
 function removeEnemy(e){scene.remove(e);const i=enemies.indexOf(e);if(i>=0)enemies.splice(i,1);if(e.userData.big)updateBossHud()}let lastHitSound=-Infinity;
+const hitNumberPosition=new THREE.Vector3();
+const hitNumberScreen=new THREE.Vector3();
+let hitNumberTime=0;
+function updateHitNumber(dt){
+  hitNumberTime=Math.max(0,hitNumberTime-dt);
+  const label=$('damage');
+  if(!playing||hitNumberTime===0){
+    if(label.style.opacity!=='0')label.style.opacity='0';
+    return;
+  }
+  hitNumberScreen.copy(hitNumberPosition);
+  hitNumberScreen.y+=(.42-hitNumberTime)*1.9;
+  hitNumberScreen.project(camera);
+  const {x,y,z}=hitNumberScreen;
+  const visible=z>-1&&z<1&&Math.abs(x)<1&&Math.abs(y)<1;
+  label.style.opacity=visible?String(Math.min(1,hitNumberTime*5)):'0';
+  label.style.left=(x+1)*innerWidth/2+'px';
+  label.style.top=(1-y)*innerHeight/2+'px';
+}
 function damageEnemy(hit,amount,position){
+hitNumberPosition.copy(position);
+hitNumberPosition.y=Math.max(hitNumberPosition.y,1.8);
+hitNumberTime=.42;
+$('damage').textContent=Math.round(amount);
 hit.userData.hp-=amount;if(elapsed-lastHitSound>.075){lastHitSound=elapsed;effect(310,145,.055,.028);}burst(position.x,position.y,position.z);if(hit.userData.hp<=0){coins+=hit.userData.big?40:8;kills++;burst(hit.position.x,2,hit.position.z,0x9c3c36);removeEnemy(hit);leaveBody(hit);updateHUD()}else { updateLabel(hit); flashHit(hit); if(hit.userData.big){if(!hit.userData.chief&&!hit.userData.bossRole&&!hit.userData.roared&&hit.userData.hp<=hit.userData.maxHp/2){hit.userData.roared=true;hit.userData.roarTime=1.2;effect(105,39,.55,.11);}updateBossHud();} }
 }
 function fire() {
@@ -553,6 +647,7 @@ let waveStats=null;
 function beginWave(){
   dragPointer=null;
   muzzleTime=0;
+  hitNumberTime=0;
   resetCombatMotion();
   waveStats={baseDamage:0,playerHits:0,blocked:0,charges:0};
   for(const lamp of streetLamps)lamp.visible=true;
@@ -620,7 +715,10 @@ function equipWeapon(index){
     icon.className='weapon-icon';
     icon.style.setProperty('--outline',weaponIcons[i]);
     icon.setAttribute('aria-hidden','true');
-    button.append(icon);
+    const name=document.createElement('span');
+    name.className='weapon-slot-name';
+    name.textContent=item.name;
+    button.append(icon,name);
     button.setAttribute('aria-pressed',String(i===weaponIndex));
     button.onclick=()=>equipWeapon(i);
     return button;
@@ -1108,7 +1206,7 @@ if(muzzleFlash.visible){
   const strength=muzzleTime/.075;
   muzzleFlash.scale.set(.08+.16*strength,.08+.16*strength,.19+.29*strength);
 }
-updateDesignPilot();updateFemaleArtPass();renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
+updateDesignPilot();updateFemaleArtPass();updateHitNumber(dt);renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
 const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
   if(bossTest)return;
@@ -1246,10 +1344,21 @@ for(let i=0;i<18000;i++){const v=40+artRandom()*65;ink.fillStyle=`rgba(${v},${v}
 ink.strokeStyle='#22262c';ink.lineWidth=2;
 for(let i=0;i<22;i++){let x=artRandom()*512,y=artRandom()*512;ink.beginPath();ink.moveTo(x,y);for(let j=0;j<5;j++){x+=artRandom()*60-30;y+=artRandom()*60;ink.lineTo(x,y);}ink.stroke();}
 const asphaltTexture=new THREE.CanvasTexture(detailCanvas);asphaltTexture.wrapS=asphaltTexture.wrapT=THREE.RepeatWrapping;asphaltTexture.repeat.set(3,18);asphaltTexture.colorSpace=THREE.SRGBColorSpace;road.map=asphaltTexture;road.needsUpdate=true;
+const illustratedStreet=new THREE.Mesh(
+  new THREE.PlaneGeometry(16.7,92),
+  new THREE.MeshStandardMaterial({color:0xada9a4,roughness:.87})
+);
+illustratedStreet.rotation.x=-Math.PI/2;
+illustratedStreet.position.set(0,.044,-36);
+illustratedStreet.receiveShadow=true;
+illustratedStreet.visible=false;
+designPilot.add(illustratedStreet);
+
+const plainSidewalks=[];
 const rubber=pilotMat(0x151a22), carPaint=pilotMat(0x334552,.3), ivory=pilotMat(0xa8acaa), hazard=pilotMat(0xe6ad42);
 // Sidewalks, roadblocks and abandoned police cars frame the playable lanes.
 for(const side of [-1,1]){
- pilotBlock(2,.18,84,pilotEdge,side*7.5,.02,-32);
+ plainSidewalks.push(pilotBlock(2,.18,84,pilotEdge,side*7.5,.02,-32));
  for(let z=2;z>-60;z-=9){
   pilotBlock(1.3,1,.65,pilotConcrete,side*6.6,.5,z);
   for(let j=0;j<3;j++){const h=pilotBlock(.19,.7,.03,hazard,side*6.6-.45+j*.4,.55,z+.34);h.rotation.z=-.4;}
@@ -1271,6 +1380,21 @@ for(const [x,z,height] of [[-7.55,3,1],[-8.7,2.4,1.45],[-8.2,4.4,.65],[7.85,-6,.
     pilotBlock(.12,height+.03,1.13,crateTrim,x+offset,height/2,z);
   }
 }
+const streetArt=document.createElement('img');
+streetArt.onload=()=>{
+  const artTexture=new THREE.Texture(streetArt);
+  artTexture.colorSpace=THREE.SRGBColorSpace;
+  artTexture.wrapT=THREE.MirroredRepeatWrapping;
+  artTexture.repeat.y=7;
+  artTexture.anisotropy=4;
+  artTexture.needsUpdate=true;
+  illustratedStreet.material.map=artTexture;
+  illustratedStreet.material.needsUpdate=true;
+  illustratedStreet.visible=true;
+  for(const mesh of [...centerMarkings,...plainSidewalks])mesh.visible=false;
+};
+streetArt.src='./assets/street-surface.webp';
+
 const drain=new THREE.Mesh(new THREE.CylinderGeometry(.47,.47,.025,24),rubber);
 drain.position.set(2.4,.061,-9);
 drain.receiveShadow=true;

@@ -42,3 +42,9 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Matched the survivor's existing model to the reference's charcoal gear and warm accents. Weapon changes now briefly lower the weapon with the existing survivor animation.
 - Added jointed arms and boots for humanoid enemies. Step animation follows ground distance so limbs stop stepping at barriers. Added a construction helmet and reflective vest accents and refined the police and nurse palettes.
 - Verified humanoid step animation and hit flash material restoration in the four viewport logic checks. Final asset fidelity, in-browser appearance and Android performance remain unverified.
+
+## Illustrated street and combat HUD
+
+- Added mobile-sized WebP art for the street surface and the female survivor portrait. The pavement art is projected onto the 3D ground and receives scene shadows. If the art fails to load, the previous geometry and material remain visible.
+- Updated the live HUD with a portrait next to base and survivor health, grouped wave and kill counters, gold, and gold-edged active weapon slots. Damage numbers project from the hit location.
+- Four emulated viewport logic checks passed, including portrait selection, pavement art activation, and damage-number expiry. Existing character rigs remain in use. On-device visual comparison and frame-rate measurement are pending.

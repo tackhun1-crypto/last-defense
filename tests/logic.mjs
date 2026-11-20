@@ -23,6 +23,15 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  vm.runInContext(code,context);
  vm.runInContext(`
  assert.equal(avatar,'female');
+ assert.equal($('survivorPortrait').dataset.avatar,'female');
+ selectAvatar('male');assert.equal($('survivorPortrait').dataset.avatar,'male');
+ selectAvatar('female');
+ assert.equal(illustratedStreet.visible,false);
+ streetArt.onload();
+ assert.equal(illustratedStreet.visible,true);
+ assert.equal(illustratedStreet.material.map.image,streetArt);
+ assert.ok(centerMarkings.every(mesh=>!mesh.visible));
+ assert.ok(plainSidewalks.every(mesh=>!mesh.visible));
  reset(); assert.equal(playing,true);assert.equal(wave,1);assert.equal(hp,100);
  makeEnemy(); assert.equal(enemies.length,1);
  const victim=enemies[0];
@@ -36,6 +45,10 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  flashHit(victim);assert.equal(animatedArm.children[0].material,hitFlashMaterial);
  updateHitFlash(victim,.2);assert.equal(animatedArm.children[0].material,fabric);
  damageEnemy(victim,999,victim.position);assert.equal(kills,1);assert.equal(coins,8);
+ assert.equal($('damage').textContent,999);
+ assert.equal(hitNumberTime,.42);
+ updateHitNumber(.5);
+ assert.equal($('damage').style.opacity,'0');
  nextShop();assert.equal(playing,false);assert.equal($('panel').dataset.screen,'shop');
  coins=1000;showShop();const before=damage;$('choices').children[0].children[1].children[1].onclick();assert.equal(damage,before+12);
  const wallet=coins;
