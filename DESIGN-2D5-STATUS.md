@@ -74,3 +74,9 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Replaced tall frontage with single-story shops, garages, kiosks and open repair yards. Lower, set-back scenery on the camera side improves sight lines.
 - Added four ordinary infected walking poses and separate final boss windup, run, and stagger frames. Survivor steps now follow actual travel distance and continue through firing, with muzzle flash tracking both the frame and body lean.
 - Logic checks cover the above-head boss number projection, damage, low building dimensions, boss phase poses and movement while firing. Android GPU verification remains pending.
+
+## Survivor reactions and obstacle labels
+
+- Barrier and slow mat meters no longer show a waiting label. The seconds label appears when an enemy activates the obstacle.
+- Added independent weapon-switch, hit, deployment and boss-arrival brace illustrations for both survivors. The crouch eases in and out while the gameplay events retain their existing timing.
+- Viewport logic checks cover the blank and active timer states, item deployment, weapon switch, hit feedback and both survivor selections.

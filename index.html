@@ -1037,7 +1037,7 @@ function positionObstacleMeters(){
     obstacle.meter.hidden=Math.abs(meterPosition.x)>1||Math.abs(meterPosition.y)>1||Math.abs(meterPosition.z)>1;
     obstacle.meter.style.left=((meterPosition.x+1)*50)+'vw';
     obstacle.meter.style.top=((1-meterPosition.y)*50)+'vh';
-    const label=obstacle.active?obstacle.time.toFixed(1)+'초':'대기';
+    const label=obstacle.active?obstacle.time.toFixed(1)+'초':'';
     if(obstacle.label.textContent!==label)obstacle.label.textContent=label;
     obstacle.gauge.value=obstacle.time;
   }
@@ -1536,7 +1536,9 @@ const atlasManifest=[
   ['./assets/actors-animals.webp',['dog','bear','tiger','male']],
   ['./assets/actors-male.webp',['male-ready','male-step-a','male-step-b','male-fire']],
   ['./assets/actors-walk.webp',['infected-walk-0','infected-walk-1','infected-walk-2','infected-walk-3']],
-  ['./assets/actors-charge.webp',['chief-windup','chief-charge-a','chief-charge-b','chief-stagger']]
+  ['./assets/actors-charge.webp',['chief-windup','chief-charge-a','chief-charge-b','chief-stagger']],
+  ['./assets/actors-hero-actions.webp',['hero-swap','hero-hit','hero-deploy','hero-brace']],
+  ['./assets/actors-male-actions.webp',['male-swap','male-hit','male-deploy','male-brace']]
 ];
 function loadActorAtlas(url,frames){
   const img=document.createElement('img');
@@ -1580,7 +1582,7 @@ paintedMuzzle.material.map=new THREE.CanvasTexture(flashCanvas);
 
 const actorScreenRight=new THREE.Vector3(),actorScreenUp=new THREE.Vector3();
 const healthLabelWorld=new THREE.Vector3();
-let heroStride=0,heroGaitWeight=0;
+let heroStride=0,heroGaitWeight=0,heroPoseHeight=1;
 function applyPaintedFrame(sprite,frame,height){
   if(sprite.material.map!==frame){
     sprite.material.map=frame;
@@ -1601,16 +1603,25 @@ function updateIllustratedActors(lateralVelocity,dt=0){
     else if(muzzleTime>0)action='fire';
   }
   const ready=actor+'-ready';
-  const requested=actor+'-'+action;
-  const pose=actorFrames[requested]?requested:actorFrames[ready]?ready:female?'hero-ready':'male';
+  const normalPose=actor+'-'+action;
+  const reaction=flinch>.28?'hit':deploy>.18?'deploy':swap>.22?'swap':brace>.38&&speed<.48?'brace':null;
+  const reactionPose=playing&&reaction?actor+'-'+reaction:null;
+  const pose=[reactionPose,normalPose,ready,female?'hero-ready':'male']
+    .find(key=>key&&actorFrames[key]);
+  const activeReaction=pose&&pose===reactionPose?reaction:null;
   const heroFrame=actorFrames[pose];
   heroSprite.visible=Boolean(heroFrame);
   if(heroFrame){
-    applyPaintedFrame(heroSprite,heroFrame,female?3.04:3.24);
+    const scale=activeReaction==='deploy'?.77:activeReaction==='brace'?.93:1;
+    heroPoseHeight=THREE.MathUtils.damp(heroPoseHeight,scale,24,dt);
+    applyPaintedFrame(heroSprite,heroFrame,(female?3.04:3.24)*heroPoseHeight);
     heroSprite.position.copy(player.position);
-    heroSprite.position.y=.09+heroGaitWeight*Math.abs(Math.sin(heroStride))*.046;
-    heroSprite.material.rotation=-Math.min(.05,recoil*.9)+heroGaitWeight*Math.sin(heroStride)*.024;
-    heroSprite.material.color.setHex(flinch>.48?0xffb4a0:0xffffff);
+    const strideLift=activeReaction?0:heroGaitWeight*Math.abs(Math.sin(heroStride))*.046;
+    const breathing=activeReaction||speed>.48?0:Math.sin(elapsed*2.5)*.013;
+    heroSprite.position.y=.09+strideLift+breathing;
+    const reactionLean=activeReaction==='hit'?flinch*.075:activeReaction==='swap'?-swap*.049:0;
+    heroSprite.material.rotation=-Math.min(.05,recoil*.9)+heroGaitWeight*Math.sin(heroStride)*.024+reactionLean;
+    heroSprite.material.color.setHex(flinch>.55?0xffd1c6:0xffffff);
     survivor.visible=maleSurvivor.visible=false;
     if(femaleGlb)femaleGlb.visible=false;
   }else{
@@ -1620,7 +1631,7 @@ function updateIllustratedActors(lateralVelocity,dt=0){
   }
   gun.visible=!heroFrame;
   for(const hand of weaponHands)hand.visible=!heroFrame;
-  paintedMuzzle.visible=Boolean(heroFrame)&&playing&&muzzleTime>0;
+  paintedMuzzle.visible=Boolean(heroFrame)&&playing&&muzzleTime>0&&(!activeReaction||activeReaction==='brace');
   if(paintedMuzzle.visible){
     const [mx,my]=muzzleAnchors[pose]??muzzleAnchors['hero-ready'];
     actorScreenRight.setFromMatrixColumn(camera.matrixWorld,0);
@@ -1679,7 +1690,9 @@ const muzzleAnchors={
   'male-ready':[.969,.714],
   'male-step-a':[.966,.721],
   'male-step-b':[.969,.747],
-  'male-fire':[.966,.789]
+  'male-fire':[.966,.789],
+  'male-brace':[.969,.708],
+  'hero-brace':[.966,.685]
 };
 
 updateHUD();loop();</script></body></html>
