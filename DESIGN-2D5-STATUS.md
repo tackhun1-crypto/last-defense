@@ -109,3 +109,10 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Weapon-specific painted front assemblies align to the sprite poses and carry the muzzle effect to the visible barrel tip. The weapon art uses the existing weapon slots and stats. Original carbine art remains underneath the attachments.
 - The start menu independently selects dusk, warm summer daylight, or a cool winter evening with instanced snow patches. The street theme is stored in checkpoints while older saves default to dusk.
 - Automated checks cover portrait updates, theme selection and restoration, snow visibility, and weapon assembly and muzzle selection.
+
+## Coastline, lucky supplies, and survivor growth
+
+- Replaced the left-side buildings with a beach and animated surf. Summer daylight and dusk display the sun, while winter evening displays the moon and cool water reflections. Scenery remains outside the player lanes.
+- Clearing a wave awards one random supply: gold, an aid kit, a slow mat, or a barricade. Re-entering the shop and reopening a save retain the reward without granting it again.
+- Enemy kills and cleared waves earn survivor XP. One point per level can be invested in damage, movement responsiveness, or base repair. Progress and rewards persist in checkpoints, and the standalone boss test does not grant XP or supplies.
+- The existing multi-viewport logic suite covers all four supply outcomes, duplicate reward prevention, growth spending and save/restore, and coastal theme selection.

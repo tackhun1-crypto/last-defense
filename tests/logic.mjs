@@ -45,11 +45,15 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  selectAvatar('male');assert.equal($('survivorPortrait').dataset.avatar,'male');
  selectAvatar('female');
  applyStreetTheme('winter');
+ assert.equal($('coastSky').dataset.phase,'moon');
+ assert.equal(coastline.name,'beach-and-sea');
+ assert.ok(designPilot.children.filter(mesh=>mesh.name.startsWith('street-')).every(mesh=>mesh.position.x>0));
  assert.equal(streetTheme,'winter');
  assert.equal(snowDust.visible,true);
  assert.ok(snowInstances.count>20);
  assert.equal(sun.color.getHex(),streetPalettes.winter.sun);
  applyStreetTheme('summer');
+ assert.equal($('coastSky').dataset.phase,'sun');
  assert.equal(snowDust.visible,false);
  assert.equal(streetLamps[0].children[2].intensity,0);
  applyStreetTheme(undefined);
@@ -121,7 +125,18 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(hitNumberTime,.42);
  updateHitNumber(.5);
  assert.equal($('damage').style.opacity,'0');
- nextShop();assert.equal(playing,false);assert.equal($('panel').dataset.screen,'shop');
+ assert.equal(growth.xp,3);
+ assert.equal(spendGrowth('power'),false);
+ nextShop(()=>.1);assert.equal(playing,false);assert.equal($('panel').dataset.screen,'shop');
+ assert.equal(supplyNote,'골드 +14');assert.equal(growth.xp,23);
+ const rewardedCoins=coins;
+ nextShop(()=>.98);assert.equal(coins,rewardedCoins);assert.equal(growth.xp,23);
+ addXP(7);assert.equal(growth.level,2);assert.equal(growth.points,1);
+ const attackBefore=damage;
+ openGrowth();assert.equal($('growthDialog').open,true);
+ assert.equal(spendGrowth('power'),true);assert.equal(damage,attackBefore+2);
+ assert.equal(growth.points,0);assert.equal(spendGrowth('agility'),false);
+ $('growthDialog').close();
  coins=1000;showShop();const before=damage;$('choices').children[0].children[1].children[1].onclick();assert.equal(damage,before+12);
  const wallet=coins;
  $('choices').children[0].children[0].children[1].onclick();
@@ -164,6 +179,8 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(walker.userData.artSprite.material.map,actorFrames['infected-walk-1']);
  restoreCheckpoint(cp);
  assert.equal(outfit,'casual-winter');assert.equal(streetTheme,'winter');
+ assert.equal(growth.level,2);assert.equal(growth.power,1);assert.equal(growth.points,0);
+ assert.equal(supplyNote,'골드 +14');
  selectOutfit('standard');applyStreetTheme('dusk');
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  beginWave();
@@ -232,6 +249,11 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
    const point=new THREE.Vector3(x,y,player.position.z).project(camera);
    assert.ok(Math.abs(point.x)<.95&&Math.abs(point.y)<.9,JSON.stringify(point));
  }
+ // Exercise the remaining deterministic supply outcomes without affecting the run.
+ wave++;playerHp=91;resolveSupplies(()=>.55);
+ assert.equal(playerHp,100);assert.equal(supplyNote,'응급 키트 · 생존자 체력 +9');
+ wave++;resolveSupplies(()=>.80);assert.equal(inventoryItems.mat,1);
+ wave++;resolveSupplies(()=>.95);assert.equal(inventoryItems.barrier,1);
  console.log('PASS',innerWidth+'x'+innerHeight,'camera, multitouch, combat, shop, purchases, items, checkpoint, bosses');
  `,context);
 }
