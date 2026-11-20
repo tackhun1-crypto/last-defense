@@ -87,17 +87,29 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  updateIllustratedActors(0);
  const boss=enemies.find(e=>e.userData.chief)||enemies.find(e=>e.userData.big);
  assert.equal(boss.userData.artSprite.material.map,actorFrames[number===10?'chief':'armored']);
- assert.ok(enemies.filter(enemy=>enemy.userData.big).every(enemy=>!enemy.userData.label));
- const meter=$(number===10?'bossHp1':'bossBar');
- const previous=meter.value;
+ const healthLabel=boss.userData.label;
+ const bossFace=boss.userData.artSprite.position.clone().addScaledVector(actorScreenUp,boss.userData.artSprite.scale.y*.9);
+ assert.ok(healthLabel.getWorldPosition(new THREE.Vector3()).project(camera).y>bossFace.project(camera).y);
+ const previous=boss.userData.hp;
  damageEnemy(boss,1,boss.position);
- assert.equal(meter.value,previous-1);
+ assert.equal(boss.userData.hp,previous-1);
+ assert.notEqual(boss.userData.label,healthLabel);
  if(number===10){
    const support=enemies.find(enemy=>enemy.userData.bossRole==='left');
    damageEnemy(support,10000,support.position);
-   assert.equal($('bossHp0').value,0);
-   assert.equal($('bossHp1').value,previous-1);
+   assert.equal(enemies.includes(support),false);
+   assert.equal(boss.userData.hp,previous-1);
+   boss.userData.windup=.5;updateIllustratedActors(0);
+   assert.equal(boss.userData.artSprite.material.map,actorFrames['chief-windup']);
+   boss.userData.windup=0;boss.userData.dash=.5;updateIllustratedActors(0);
+   assert.equal(boss.userData.artSprite.material.map,actorFrames['chief-charge-b']);
  }}
+ assert.ok(designPilot.children.filter(mesh=>mesh.name.startsWith('street-')).every(mesh=>mesh.geometry.parameters.height<=3.05));
+ enemies.slice().forEach(removeEnemy);wave=2;spawned=0;makeEnemy();
+ const walker=enemies[0];updateIllustratedActors(0);
+ assert.equal(walker.userData.artSprite.material.map,actorFrames['infected-walk-0']);
+ walker.userData.walkDistance=.39;updateIllustratedActors(0);
+ assert.equal(walker.userData.artSprite.material.map,actorFrames['infected-walk-1']);
  restoreCheckpoint(cp);
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  beginWave();
@@ -114,6 +126,9 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(muzzleTime,.075);
  updateIllustratedActors(0);
  assert.equal(heroSprite.material.map,actorFrames['hero-fire']);
+ assert.equal(paintedMuzzle.visible,true);
+ updateIllustratedActors(3,.06);
+ assert.equal(heroSprite.material.map,actorFrames['hero-step-a']);
  assert.equal(paintedMuzzle.visible,true);
  selectAvatar('male');updateIllustratedActors(0);
  assert.equal(heroSprite.material.map,actorFrames['male-fire']);

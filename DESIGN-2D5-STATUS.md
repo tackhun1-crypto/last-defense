@@ -67,3 +67,10 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - The city blocks now alternate boarded stores and shuttered warehouses, with entrance trim, window mullions, awnings, drainage pipes and rooftop equipment.
 - Both survivors have independent ready, step and firing poses with calibrated muzzle positions. The male sprite from the animal atlas remains a fallback.
 - Logic checks verify direct boss damage, side-boss defeat, no sprite above any boss, and the male and female combat pose selection.
+
+## Clear combat view and action poses
+
+- Removed boss progress bars and moved boss health back to compact numbers anchored just above the painted head. No additional boss panel takes up combat space.
+- Replaced tall frontage with single-story shops, garages, kiosks and open repair yards. Lower, set-back scenery on the camera side improves sight lines.
+- Added four ordinary infected walking poses and separate final boss windup, run, and stagger frames. Survivor steps now follow actual travel distance and continue through firing, with muzzle flash tracking both the frame and body lean.
+- Logic checks cover the above-head boss number projection, damage, low building dimensions, boss phase poses and movement while firing. Android GPU verification remains pending.

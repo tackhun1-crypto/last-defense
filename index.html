@@ -1,9 +1,9 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAST DEFENSE · Quarantine</title><style>*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#101a25;font-family:system-ui,'Noto Sans KR',sans-serif;color:white;touch-action:none}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}#top{display:flex;justify-content:space-between;align-items:start;padding:16px;gap:10px} .pill{background:#142333cc;border:1px solid #ffffff33;border-radius:15px;padding:10px 13px;box-shadow:0 6px 20px #0003;font-weight:800;font-size:14px}#health{height:9px;width:130px;background:#4b222b;border-radius:10px;overflow:hidden;margin-top:7px}#healthFill{height:100%;background:#63e6a2;width:100%}#bottom{position:absolute;bottom:20px;width:100%;text-align:center;font-size:13px;text-shadow:0 2px 4px #000;opacity:.85}#panel{position:absolute;inset:0;background:#0b1525b9;display:flex;align-items:center;justify-content:center;pointer-events:auto;padding:20px}#card{width:min(410px,100%);background:linear-gradient(150deg,#253e58,#142235);padding:25px;border-radius:24px;border:1px solid #ffffff30;box-shadow:0 20px 80px #0008;text-align:center}h1{font-size:30px;margin:5px 0 12px;letter-spacing:1px}p{line-height:1.6;color:#dce7f5}button{border:0;border-radius:13px;background:#f4bb45;color:#1c2735;font-size:17px;font-weight:900;padding:15px 22px;width:100%;margin-top:10px;cursor:pointer}.secondary{background:#74d8db}#choices{display:grid;gap:8px}.small{font-size:12px;opacity:.8}#damage{position:absolute;left:50%;top:30%;transform:translateX(-50%);font-size:40px;font-weight:900;color:#ffdb75;text-shadow:0 3px 12px #000;opacity:0;transition:opacity .2s}#error{position:absolute;inset:0;display:none;background:#172333;padding:30px;z-index:30}#bossHud{position:absolute;top:104px;left:50%;transform:translateX(-50%);width:min(360px,90vw);text-align:center;background:#39243a;padding:9px;border-radius:12px}#bossHud progress{display:block;width:100%;accent-color:#f17e85}#card{max-height:90dvh;overflow:auto;touch-action:pan-y}button:disabled{opacity:.55;cursor:default}@media(max-width:420px){#top{padding:8px;gap:5px}.pill{padding:7px;font-size:12px}#health{width:86px}}.hurt{outline:3px solid #ff8b83}#baseStat{border-radius:4px}#loadout{position:absolute;bottom:48px;left:10px;width:min(240px,65vw);padding:8px;background:#142333e8;border-radius:10px;font-size:12px;pointer-events:auto}#loadout[hidden]{display:none}#weaponSlots{display:grid;grid-template-columns:1fr 1fr;gap:4px}#weaponSlots button{font-size:11px;padding:6px 3px;margin:0;min-height:38px;background:#d9e9f5}#weaponSlots button[aria-pressed=true]{background:#f4bb45}#loadout{width:max-content;max-width:calc(100vw - 20px);padding:5px;bottom:calc(43px + env(safe-area-inset-bottom))}
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>LAST DEFENSE · Quarantine</title><style>*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#101a25;font-family:system-ui,'Noto Sans KR',sans-serif;color:white;touch-action:none}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}#top{display:flex;justify-content:space-between;align-items:start;padding:16px;gap:10px} .pill{background:#142333cc;border:1px solid #ffffff33;border-radius:15px;padding:10px 13px;box-shadow:0 6px 20px #0003;font-weight:800;font-size:14px}#health{height:9px;width:130px;background:#4b222b;border-radius:10px;overflow:hidden;margin-top:7px}#healthFill{height:100%;background:#63e6a2;width:100%}#bottom{position:absolute;bottom:20px;width:100%;text-align:center;font-size:13px;text-shadow:0 2px 4px #000;opacity:.85}#panel{position:absolute;inset:0;background:#0b1525b9;display:flex;align-items:center;justify-content:center;pointer-events:auto;padding:20px}#card{width:min(410px,100%);background:linear-gradient(150deg,#253e58,#142235);padding:25px;border-radius:24px;border:1px solid #ffffff30;box-shadow:0 20px 80px #0008;text-align:center}h1{font-size:30px;margin:5px 0 12px;letter-spacing:1px}p{line-height:1.6;color:#dce7f5}button{border:0;border-radius:13px;background:#f4bb45;color:#1c2735;font-size:17px;font-weight:900;padding:15px 22px;width:100%;margin-top:10px;cursor:pointer}.secondary{background:#74d8db}#choices{display:grid;gap:8px}.small{font-size:12px;opacity:.8}#damage{position:absolute;left:50%;top:30%;transform:translateX(-50%);font-size:40px;font-weight:900;color:#ffdb75;text-shadow:0 3px 12px #000;opacity:0;transition:opacity .2s}#error{position:absolute;inset:0;display:none;background:#172333;padding:30px;z-index:30}#card{max-height:90dvh;overflow:auto;touch-action:pan-y}button:disabled{opacity:.55;cursor:default}@media(max-width:420px){#top{padding:8px;gap:5px}.pill{padding:7px;font-size:12px}#health{width:86px}}.hurt{outline:3px solid #ff8b83}#baseStat{border-radius:4px}#loadout{position:absolute;bottom:48px;left:10px;width:min(240px,65vw);padding:8px;background:#142333e8;border-radius:10px;font-size:12px;pointer-events:auto}#loadout[hidden]{display:none}#weaponSlots{display:grid;grid-template-columns:1fr 1fr;gap:4px}#weaponSlots button{font-size:11px;padding:6px 3px;margin:0;min-height:38px;background:#d9e9f5}#weaponSlots button[aria-pressed=true]{background:#f4bb45}#loadout{width:max-content;max-width:calc(100vw - 20px);padding:5px;bottom:calc(43px + env(safe-area-inset-bottom))}
 #weaponSlots{display:flex;gap:3px}
 #weaponSlots button{display:grid;place-items:center;width:44px;height:44px;min-height:44px}
 #weaponStats{font-variant-numeric:tabular-nums;text-align:center;margin-bottom:3px}
 .weapon-icon{width:33px;height:21px;background:#20344b;clip-path:polygon(var(--outline))}
-#playerMeter{height:6px;width:100%;accent-color:#82cbff;display:block}#playerStat{margin-top:5px}#playerHit{color:#ffc2f6;margin-left:4px}#playerHit[hidden]{display:none} .shop-layout{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px}.shop-inventory{display:grid;align-content:start;gap:6px}.shop-inventory button{display:grid;place-items:center;min-height:44px;padding:4px;margin:0;background:#dae9f5}.shop-inventory button[aria-pressed=true]{background:#f4bb45}.shop-upgrades button{font-size:14px;padding:11px 5px}.shop-inventory button.locked{background:#9caec0}.shop-inventory button.locked::after{content:"🔒";font-size:10px}#purchaseDialog{width:min(320px,90vw);background:#20344b;color:white;border:1px solid #8194aa;border-radius:16px;padding:16px;text-align:center}#purchaseDialog::backdrop{background:#091320b0}#itemsDialog{width:min(330px,90vw);background:#20344b;color:white;border:1px solid #8194aa;border-radius:16px}#itemsDialog::backdrop{background:#091320b0}#itemSlots{display:flex;gap:4px}#itemSlots button{width:auto;min-height:44px;margin:4px 0 0;padding:5px;font-size:12px}.shop-inventory button{font-size:12px}#avatarChoices{display:flex;gap:8px}#avatarChoices button{background:#dae9f5;margin:0;padding:10px}#avatarChoices button[aria-pressed=true]{background:#f4bb45}#bossHud{border:1px solid #dcab5b;background:#13292dea}#bossHud progress{accent-color:#f5aa4e}.boss-tests{display:flex;gap:5px;margin-top:7px}.boss-tests button{margin:0;min-height:44px;padding:4px;font-size:11px;background:#dae9f5;color:#23374d}#bossHud{background:linear-gradient(145deg,#102c32,#101a24);color:#ffe2aa;border-radius:5px;box-shadow:0 5px 16px #08141799}#bossHud progress{height:9px}#loadout{border:1px solid #527d88}#weaponSlots button[aria-pressed=true]{box-shadow:inset 0 0 0 2px #fff2ad}#bossTrio:not([hidden]){display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:6px}#bossTrio span{font-size:11px}#bossTrio progress{accent-color:#b477f2}#bossTrio #bossHp1{accent-color:#f5aa4e}#bossHud [hidden]{display:none}#bossTrio .alert{color:#ffca77;font-weight:900}#obstacleMeters{position:fixed;inset:0;pointer-events:none} .ob-meter{position:absolute;transform:translate(-50%,-100%);width:66px;padding:2px;background:#142333e8;border-radius:4px;text-align:center;font-size:10px}.ob-meter progress{width:100%;height:6px;display:block;accent-color:#ffc276}.ob-meter.mat progress{accent-color:#81dcff}
+#playerMeter{height:6px;width:100%;accent-color:#82cbff;display:block}#playerStat{margin-top:5px}#playerHit{color:#ffc2f6;margin-left:4px}#playerHit[hidden]{display:none} .shop-layout{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px}.shop-inventory{display:grid;align-content:start;gap:6px}.shop-inventory button{display:grid;place-items:center;min-height:44px;padding:4px;margin:0;background:#dae9f5}.shop-inventory button[aria-pressed=true]{background:#f4bb45}.shop-upgrades button{font-size:14px;padding:11px 5px}.shop-inventory button.locked{background:#9caec0}.shop-inventory button.locked::after{content:"🔒";font-size:10px}#purchaseDialog{width:min(320px,90vw);background:#20344b;color:white;border:1px solid #8194aa;border-radius:16px;padding:16px;text-align:center}#purchaseDialog::backdrop{background:#091320b0}#itemsDialog{width:min(330px,90vw);background:#20344b;color:white;border:1px solid #8194aa;border-radius:16px}#itemsDialog::backdrop{background:#091320b0}#itemSlots{display:flex;gap:4px}#itemSlots button{width:auto;min-height:44px;margin:4px 0 0;padding:5px;font-size:12px}.shop-inventory button{font-size:12px}#avatarChoices{display:flex;gap:8px}#avatarChoices button{background:#dae9f5;margin:0;padding:10px}#avatarChoices button[aria-pressed=true]{background:#f4bb45}.boss-tests{display:flex;gap:5px;margin-top:7px}.boss-tests button{margin:0;min-height:44px;padding:4px;font-size:11px;background:#dae9f5;color:#23374d}#loadout{border:1px solid #527d88}#weaponSlots button[aria-pressed=true]{box-shadow:inset 0 0 0 2px #fff2ad}#obstacleMeters{position:fixed;inset:0;pointer-events:none} .ob-meter{position:absolute;transform:translate(-50%,-100%);width:66px;padding:2px;background:#142333e8;border-radius:4px;text-align:center;font-size:10px}.ob-meter progress{width:100%;height:6px;display:block;accent-color:#ffc276}.ob-meter.mat progress{accent-color:#81dcff}
 :root{color-scheme:dark;--surface:#12282d;--edge:#456366;--text:#edf6f4;--muted:#b3cac9;--accent:#f5b75e}
 body{font-family:"Inter",system-ui,"Noto Sans KR",sans-serif;background:#102126;color:var(--text)}
 #panel{padding:clamp(12px,4vw,24px);background:#061215b8}
@@ -20,7 +20,7 @@ body{font-family:"Inter",system-ui,"Noto Sans KR",sans-serif;background:#102126;
 #avatarChoices button[aria-pressed=true]{background:#f5b75e;color:#251a0b;border-color:#f5b75e}
 #top{gap:5px;padding:calc(7px + env(safe-area-inset-top)) 7px 5px}
 .pill{background:#0d2026e8;border-color:#557678;color:#edf6f4;border-radius:7px;padding:6px 8px;font-size:clamp(10px,3vw,13px);font-variant-numeric:tabular-nums}
-#bossHud{border-color:#d7a653;background:#102529e8;top:calc(90px + env(safe-area-inset-top))}
+
 #loadout{background:#102429ed;border-color:#557678;border-radius:8px}
 #weaponSlots button{border-radius:6px;background:#d0e6e3}
 #weaponSlots button[aria-pressed=true]{background:var(--accent)}
@@ -46,10 +46,10 @@ body{font-family:"Inter",system-ui,"Noto Sans KR",sans-serif;background:#102126;
 #weaponSlots button[aria-pressed=true]{background:#55452c;border:2px solid #ffce69;box-shadow:0 0 10px #f6b83a55}
 #itemSlots button{min-height:44px;font-size:14px;border:1px solid #777e83;background:#303d46}
 #bottom{font-size:12px;bottom:calc(6px + env(safe-area-inset-bottom))}
-#bossHud{top:calc(104px + env(safe-area-inset-top));background:#241b22ef;border:1px solid #d77060}
+
 dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-action:pan-y}
-@media(max-width:480px){.pill{font-size:12px;padding:7px}#top{gap:4px}#health{width:90px}#playerStat{font-size:11px}#loadout{padding:6px}#weaponStats{font-size:12px}#bossHud{top:98px}}
-@media(max-height:500px){#top{padding:6px}.pill{font-size:12px;padding:5px 9px}#loadout{left:auto;right:8px;transform:none;bottom:22px}#bossHud{top:6px;width:32vw}#card{max-height:calc(100dvh - 16px);padding:14px}#description{margin-bottom:5px}#card button{margin-top:6px}}
+@media(max-width:480px){.pill{font-size:12px;padding:7px}#top{gap:4px}#health{width:90px}#playerStat{font-size:11px}#loadout{padding:6px}#weaponStats{font-size:12px}}
+@media(max-height:500px){#top{padding:6px}.pill{font-size:12px;padding:5px 9px}#loadout{left:auto;right:8px;transform:none;bottom:22px}#card{max-height:calc(100dvh - 16px);padding:14px}#description{margin-bottom:5px}#card button{margin-top:6px}}
 
 #hud::before{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -101,7 +101,6 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
   .health-hud{gap:4px}
 }
 @media(max-height:500px){
-  #bossHud{top:79px}
   #loadout{left:50%;right:auto;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom))}
 }
 
@@ -110,17 +109,8 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
   display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;
 }
 #battleDock #loadout{position:relative;inset:auto;transform:none}
-#battleDock #bossHud{
-  position:relative;inset:auto;transform:none;width:min(350px,calc(100% - 16px));
-  padding:5px 8px;background:#17191fee;border-color:#726071;border-radius:9px;
-  font-size:11px;letter-spacing:.015em;pointer-events:none;
-}
-#bossHud[hidden],#bossTrio[hidden]{display:none}
-#bossHud progress{height:5px;margin:3px 0 0}
-#bossTrio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;text-align:left}
-#bossTrio>div:nth-child(2) progress{accent-color:#ff9860}
-#bossTrio>div:not(:nth-child(2)) progress{accent-color:#d090ee}
 @media(max-height:500px){#battleDock{bottom:calc(20px + env(safe-area-inset-bottom))}}
+.a11y-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 </style></head><body><div id="hud"><div id="top" aria-label="전투 현황">
   <div class="hud-brand" aria-hidden="true">LAST<strong>DEFENSE</strong></div>
   <div class="pill health-hud">
@@ -141,7 +131,7 @@ dialog{width:min(400px,calc(100vw - 24px));max-height:85dvh;overflow:auto;touch-
     <div><span class="hud-gold" aria-hidden="true">G</span> <b id="coins" aria-label="보유 골드">0</b></div>
     <div><span class="hud-label">무기 Lv.</span> <b id="level">1</b></div>
   </div>
-</div><div id="damage" aria-hidden="true"></div><div id="battleDock"><div id="bossHud" hidden><strong id="bossStatus" role="status"></strong><progress id="bossBar" aria-label="거대 좀비 체력" hidden></progress><div id="bossTrio" hidden><div><span id="bossLabel0">왼쪽</span><progress id="bossHp0" aria-label="왼쪽 보스 체력"></progress></div><div><span id="bossLabel1">중앙</span><progress id="bossHp1" aria-label="중앙 보스 체력"></progress></div><div><span id="bossLabel2">오른쪽</span><progress id="bossHp2" aria-label="오른쪽 보스 체력"></progress></div></div></div><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
+</div><div id="damage" aria-hidden="true"></div><div id="battleDock"><span id="bossStatus" class="a11y-only" role="status"></span><div id="loadout" hidden><div id="weaponStats"></div><div id="weaponSlots"></div><div id="itemSlots"></div><div id="obstacleMeters"></div></div></div><div id="bottom">화면을 좌우로 드래그해서 이동 · 정면으로 자동 발사</div></div><div id="panel" data-screen="start"><div id="card"><h1 id="title">LAST <strong>DEFENSE</strong></h1><p id="description">방어선을 지켜라!<br>좌우로 움직여 좀비와 같은 줄에 서세요. 정면으로 자동 발사합니다.<br>웨이브를 막아내고 무기를 강화하세요.</p><div id="choices"><div id="avatarChoices" role="group" aria-label="캐릭터 선택"><button type="button" data-avatar="male" aria-pressed="true">남성</button><button type="button" data-avatar="female" aria-pressed="false">여성</button></div><button id="start">일반 시작 ▶</button><button id="continueRun" hidden></button><button id="hardStart" class="secondary">하드 시작 ▶</button></div></div></div><dialog id="purchaseDialog" aria-labelledby="purchaseName"><strong id="purchaseName"></strong><p id="purchaseDetails"></p><p id="purchaseMatchup"></p><button id="purchaseConfirm" type="button">구매</button><form method="dialog"><button class="secondary">닫기</button></form></dialog><dialog id="itemsDialog" aria-labelledby="itemsTitle"><strong id="itemsTitle">ITEM</strong><p id="itemGold"></p><div id="itemOptions"></div><form method="dialog"><button class="secondary">닫기</button></form></dialog><div id="error">3D 화면을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js"}}</script><script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 const $=id=>document.getElementById(id);const scene=new THREE.Scene();scene.background=new THREE.Color(0xa8d1e4);scene.fog=new THREE.Fog(0xa8d1e4,28,95);const camera=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,.1,140);let renderer;
 try {
@@ -445,7 +435,7 @@ if(chief)e.position.set(0,0,-61);
 const runner=supportX===null&&!big&&(hardMode||wave>=2)&&spawned%4===0;
 const animal=opening?(['dog','bear','tiger'].includes(opening.kind)?opening.kind:null):big||supportX!==null?null:runner?"dog":(hardMode||wave>=3)&&spawned%4===1?"bear":wave>=4&&spawned%4===2?"tiger":null;
 if(animal){makeAnimal(e,animal);return;}
-const role=opening?.kind==="carpenter"?"carpenter":big||ranged||supportX!==null?"": ["police","nurse","carpenter","baby"][spawned%4];
+const role=opening?.kind==="carpenter"?"carpenter":big||ranged||supportX!==null||opening?.kind==='human'?"": ["police","nurse","carpenter","baby"][spawned%4];
 const body=big?1.7:role==="baby"?.62:role==='carpenter'?1.534:1;
 const uniform={police:0x283956,nurse:0xc2bfc4,carpenter:0xac6035,baby:0x8596ab}[role];
 const zombieSkin=mat(chief?0xab6d69:big?0x9b8eac:0x93917e);
@@ -542,11 +532,7 @@ if(big){
   e.userData.core=core;
 }
 e.scale.setScalar(chief?2.68:big?2.145:1);const health=enemyHealth(big?(chief?480:bossRole?290:180+wave*22):(role==='baby'?27:role==='carpenter'?55:40)+wave*10);
-e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};if(!big){
-  e.userData.label=textSprite(e.userData.hp);
-  e.userData.label.position.y=e.userData.labelHeight;
-  e.add(e.userData.label);
-}
+e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};updateLabel(e);
 scene.add(e);e.userData.illustration=chief?'chief':big?'armored':ranged?'ranged':
   ({police:'police',nurse:'nurse',carpenter:'worker'}[role]??(supportX!==null?'heavy':'infected'));
 e.userData.artHeight=(big?2.43:2.75)*body*e.scale.y;addContactShadow(e,body*e.scale.x*1.85,body*e.scale.x*1.2);enemies.push(e);if(big)updateBossHud()}const animalStats={
@@ -622,36 +608,30 @@ function showHurt(id){
     hurtTimers.delete(id);
   },260));
 }
-function updateLabel(e){if(!e.userData.label)return;e.remove(e.userData.label);e.userData.label.material.map.dispose();e.userData.label.material.dispose();e.userData.label=textSprite(Math.max(0,Math.ceil(e.userData.hp)));e.userData.label.position.set(0,e.userData.labelHeight??(e.userData.big?4.7:3.15),0);e.add(e.userData.label)}function burst(x,y,z,color=0xffb75b){for(let i=0;i<6;i++){const p=sphere(.06,mat(color,{emissive:color,emissiveIntensity:.5}),x,y,z);p.userData={life:.35,vel:new THREE.Vector3((Math.random()-.5)*5,Math.random()*4,(Math.random()-.5)*5)};particles.push(p)}}function updateBossHud() {
-  const bosses=enemies.filter(enemy=>enemy.userData.big);
-  const boss=bosses.find(enemy=>enemy.userData.chief)||bosses[0];
-  const warning=wave%5===0 && spawned===toSpawn-1 && spawnTimer>0;
-  $('bossHud').hidden=!playing || (!boss && !warning);
-  const trio=wave===10&&Boolean(boss);
-  $('bossTrio').hidden=!trio;
-  $('bossBar').hidden=!boss||trio;
-  if(trio){
-    const ordered=[bosses.find(e=>e.userData.bossRole==='left'),bosses.find(e=>e.userData.chief),bosses.find(e=>e.userData.bossRole==='right')];
-    ordered.forEach((enemy,i)=>{
-      const data=enemy?.userData;
-      const status=!data?' · 전투 종료':data.windup>0?' · 돌진 준비':data.dash>0?' · 돌진':data.stun>0?' · 저지':'';
-      const label=$('bossLabel'+i);
-      label.textContent=['좌측 서브보스','중앙 보스','우측 서브보스'][i]+status;
-      label.classList.toggle('alert',Boolean(data?.windup>0||data?.dash>0));
-      const bar=$('bossHp'+i);
-      bar.max=data?.maxHp??1;
-      bar.value=Math.max(0,data?.hp??0);
-    });
-    $('bossStatus').textContent='10웨이브 · 거대 보스전';
-    return;
+function updateLabel(enemy){
+  const data=enemy.userData;
+  if(data.label){
+    enemy.remove(data.label);
+    data.label.material.map.dispose();
+    data.label.material.dispose();
   }
-  if(boss){
-    $('bossStatus').textContent=boss.userData.windup>0?'⚠ 중앙 보스 돌진 준비!':boss.userData.stun>0?'중앙 보스 · 돌진 저지!':bosses.length>1?`거대 보스 · ${bosses.length}마리 남음`:boss.userData.roarTime>0?'⚠ 포효 중 · 양옆에 좀비 등장!':'거대 좀비';
-    $('bossBar').max=bosses.reduce((sum,e)=>sum+e.userData.maxHp,0);
-    $('bossBar').value=bosses.reduce((sum,e)=>sum+e.userData.hp,0);
-  }else if(warning){
-    $('bossStatus').textContent='⚠ 거대 좀비 접근 중!';
+  data.label=textSprite(Math.max(0,Math.ceil(data.hp)));
+  data.label.position.y=data.labelHeight??3.15;
+  if(data.big)data.label.scale.set(1.55/enemy.scale.x,.78/enemy.scale.y,1);
+  enemy.add(data.label);
+}
+function burst(x,y,z,color=0xffb75b){for(let i=0;i<6;i++){const p=sphere(.06,mat(color,{emissive:color,emissiveIntensity:.5}),x,y,z);p.userData={life:.35,vel:new THREE.Vector3((Math.random()-.5)*5,Math.random()*4,(Math.random()-.5)*5)};particles.push(p)}}function updateBossHud(){
+  const boss=enemies.find(enemy=>enemy.userData.chief)||enemies.find(enemy=>enemy.userData.big);
+  const state=boss?.userData;
+  let text='';
+  if(playing){
+    if(state?.windup>0)text='최종 보스 돌진 준비';
+    else if(state?.stun>0)text='최종 보스 돌진 저지';
+    else if(state?.roarTime>0)text='거대 좀비 포효';
+    else if(!boss&&wave%5===0&&spawned===toSpawn-1&&spawnTimer>0)text='거대 좀비 접근 중';
   }
+  const status=$('bossStatus');
+  if(status.textContent!==text)status.textContent=text;
 }
 function removeEnemy(e){scene.remove(e);if(e.userData.artSprite){
   e.userData.artSprite.removeFromParent();
@@ -1275,7 +1255,7 @@ if(muzzleFlash.visible){
 }
 positionContactShadow(player);
 for(const enemy of enemies)positionContactShadow(enemy);
-updateIllustratedActors(lateralVelocity);
+updateIllustratedActors(lateralVelocity,dt);
 updateDesignPilot();updateFemaleArtPass();updateHitNumber(dt);renderer.render(scene,camera);positionObstacleMeters()}let latestCheckpoint=null;
 const checkpointKey="last-defense-checkpoint-v1";
 function saveCheckpoint(){
@@ -1382,45 +1362,57 @@ function facadeDetail(w,h,d,material,x,y,z){
   detail.castShadow=false;
   return detail;
 }
+// Keep the camera-side foreground open, with low rooflines along the road.
+const siding=pilotMat(0x57645f,.12);
+const roofSlate=pilotMat(0x343d44,.12);
+const blockTypes=[
+  {name:'store',height:2.85,width:5.4,depth:7.8,wall:brickWall},
+  {name:'garage',height:3.05,width:5.8,depth:8.4,wall:siding},
+  {name:'kiosk',height:2.15,width:3.35,depth:4.1,wall:pilotConcrete},
+  {name:'yard',height:1.05,width:4.4,depth:7.2,wall:concreteTrim}
+];
 for(let z=4;z>-70;z-=12){
   for(const side of [-1,1]){
-    const x=side*11.3;
     const block=Math.round((4-z)/12);
-    const convertedWarehouse=(block+(side>0?1:0))%3===0;
-    const height=convertedWarehouse?5.45:6.4+(block%3)*.7;
-    pilotBlock(5.8,height,8.6,brickWall,x,height/2-.05,z-3.1);
-    pilotBlock(6.1,.38,9,pilotEdge,x,height+.05,z-3.1);
-    const facadeX=x-side*2.99;
-    pilotBlock(.24,.32,8.75,pilotEdge,facadeX,.62,z-3.1);
-    pilotBlock(.24,.22,8.75,pilotEdge,facadeX,height-.56,z-3.1);
-    if(convertedWarehouse){
-      facadeDetail(.31,2.5,3.05,concreteTrim,facadeX,1.26,z-1.15);
-      facadeDetail(.14,2.2,2.7,shutterSteel,facadeX-side*.22,1.15,z-1.15);
+    const nearCamera=side>0&&block<2;
+    const plan=blockTypes[(block+(side>0?2:0))%blockTypes.length];
+    const x=side*(nearCamera?12.7:11.6);
+    const row=z-2.9;
+    const {name,height,width,depth,wall:material}=plan;
+    const front=x-side*(width/2+.08);
+    if(name==='yard'){
+      // Open repair yard with isolated low barriers rather than a solid building.
+      facadeDetail(.22,.83,depth,material,x-side*.45,.42,row);
+      for(const dz of [-2.8,0,2.8]){
+        facadeDetail(.26,height,.21,shutterSteel,x-side*.45,height/2,row+dz);
+      }
+      facadeDetail(2.1,.11,2.6,siding,x+side*.48,1.66,row+.82).rotation.z=side*.09;
+      facadeDetail(.10,1.66,.10,shutterSteel,x-side*.48,.83,row+1.83);
+      facadeDetail(.10,1.66,.10,shutterSteel,x-side*.48,.83,row-.29);
+      continue;
+    }
+    const building=pilotBlock(width,height,depth,material,x,height/2,row);
+    building.name='street-'+name;
+    facadeDetail(width+.32,.19,depth+.36,roofSlate,x,height+.07,row);
+    facadeDetail(.14,.14,depth,concreteTrim,front,.16,row);
+    if(name==='garage'){
+      facadeDetail(.25,2.4,3.18,concreteTrim,front,1.24,row);
+      facadeDetail(.15,2.15,2.84,shutterSteel,front-side*.18,1.14,row);
       for(let slat=1;slat<8;slat++){
-        facadeDetail(.038,.03,2.63,pilotEdge,facadeX-side*.31,.16+slat*.255,z-1.15);
+        facadeDetail(.035,.032,2.8,pilotEdge,front-side*.28,.15+slat*.255,row);
       }
-      facadeDetail(1,.12,3.6,awningCanvas,facadeX-side*.47,2.6,z-1.15).rotation.z=side*.13;
+      facadeDetail(.75,.13,3.42,roofSlate,front-side*.34,2.59,row);
+      facadeDetail(.09,.24,.36,pilotWindow,front-side*.13,2.62,row-1.02);
     }else{
-      facadeDetail(.28,2.4,1.55,concreteTrim,facadeX,1.19,z-.72);
-      facadeDetail(.13,2.13,1.25,pilotRust,facadeX-side*.2,1.08,z-.72);
-      facadeDetail(.04,.72,.18,shutterSteel,facadeX-side*.29,1.58,z-.72);
-      facadeDetail(.16,2.08,2.56,windowGlass,facadeX,1.24,z-4.7);
-      facadeDetail(.19,2.14,.09,concreteTrim,facadeX-side*.11,1.24,z-4.7);
-      facadeDetail(.85,.13,2.86,awningCanvas,facadeX-side*.38,2.4,z-4.7).rotation.z=side*.16;
+      const kiosk=name==='kiosk';
+      const frameY=kiosk?1.36:1.51;
+      facadeDetail(.16,kiosk?.86:1.43,kiosk?2.3:3.35,windowGlass,front,frameY,row);
+      facadeDetail(.11,kiosk?.9:1.47,.08,concreteTrim,front-side*.1,frameY,row);
+      facadeDetail(.84,.1,kiosk?2.6:3.64,awningCanvas,front-side*.38,frameY+(kiosk?.57:.90),row).rotation.z=side*.11;
+      facadeDetail(.16,.11,kiosk?2.39:3.44,concreteTrim,front-side*.10,frameY-(kiosk?.45:.75),row);
+      if(!kiosk)facadeDetail(.16,2.02,1.16,shutterSteel,front,1.06,row+2.57);
     }
-    facadeDetail(.12,height-.55,.11,shutterSteel,facadeX-side*.13,height*.5,z-6.77);
-    facadeDetail(1.2,.56,1.5,shutterSteel,x-side*1.5,height+.48,z-5.8);
-    for(let level=2.52;level<height-1;level+=1.5){
-      for(let offset of [-2,0,2]){
-        const frame=pilotBlock(.22,.93,1.12,pilotEdge,x-side*3.06,level,z-3.1+offset);
-        frame.castShadow=false;
-        const glass=pilotBlock(.10,.70,.87,(offset===0&&level<3&&side<0)?pilotWindow:windowGlass,x-side*3.22,level,z-3.1+offset);
-        glass.castShadow=false;
-        facadeDetail(.052,.74,.065,shutterSteel,x-side*3.29,level,z-3.1+offset);
-        facadeDetail(.16,.075,1.17,concreteTrim,x-side*3.3,level-.47,z-3.1+offset);
-      }
-    }
-    pilotBlock(1.1,1.1,1.2,pilotRust,side*7.65,.55,z+1);
+    facadeDetail(.12,height-.22,.11,shutterSteel,front-side*.08,height/2,row-depth/2+.13);
   }
   pilotBlock(.15,.018,3.2,pilotYellow,-4.9,.095,z);
   pilotBlock(.15,.018,3.2,pilotYellow,4.9,.095,z);
@@ -1542,7 +1534,9 @@ const atlasManifest=[
   ['./assets/actors-infected.webp',['infected','police','nurse','worker']],
   ['./assets/actors-boss.webp',['armored','chief','ranged','heavy']],
   ['./assets/actors-animals.webp',['dog','bear','tiger','male']],
-  ['./assets/actors-male.webp',['male-ready','male-step-a','male-step-b','male-fire']]
+  ['./assets/actors-male.webp',['male-ready','male-step-a','male-step-b','male-fire']],
+  ['./assets/actors-walk.webp',['infected-walk-0','infected-walk-1','infected-walk-2','infected-walk-3']],
+  ['./assets/actors-charge.webp',['chief-windup','chief-charge-a','chief-charge-b','chief-stagger']]
 ];
 function loadActorAtlas(url,frames){
   const img=document.createElement('img');
@@ -1585,6 +1579,8 @@ flashInk.lineTo(0,32);flashInk.lineTo(27,26);flashInk.closePath();flashInk.fill(
 paintedMuzzle.material.map=new THREE.CanvasTexture(flashCanvas);
 
 const actorScreenRight=new THREE.Vector3(),actorScreenUp=new THREE.Vector3();
+const healthLabelWorld=new THREE.Vector3();
+let heroStride=0,heroGaitWeight=0;
 function applyPaintedFrame(sprite,frame,height){
   if(sprite.material.map!==frame){
     sprite.material.map=frame;
@@ -1592,13 +1588,17 @@ function applyPaintedFrame(sprite,frame,height){
   }
   sprite.scale.set(height*320/384,height,1);
 }
-function updateIllustratedActors(lateralVelocity){
+function updateIllustratedActors(lateralVelocity,dt=0){
+  actorScreenUp.setFromMatrixColumn(camera.matrixWorld,1);
+  const speed=playing?Math.abs(lateralVelocity):0;
+  heroStride=(heroStride+Math.min(speed,13)*dt*4.1)%(Math.PI*2);
+  heroGaitWeight=THREE.MathUtils.damp(heroGaitWeight,Math.min(1,speed*.45),18,dt);
   const female=avatar==='female';
   const actor=female?'hero':'male';
   let action='ready';
   if(playing){
-    if(muzzleTime>0)action='fire';
-    else if(Math.abs(lateralVelocity)>.5)action=Math.floor(elapsed*7)%2?'step-a':'step-b';
+    if(speed>.48)action=heroStride<Math.PI?'step-a':'step-b';
+    else if(muzzleTime>0)action='fire';
   }
   const ready=actor+'-ready';
   const requested=actor+'-'+action;
@@ -1608,8 +1608,8 @@ function updateIllustratedActors(lateralVelocity){
   if(heroFrame){
     applyPaintedFrame(heroSprite,heroFrame,female?3.04:3.24);
     heroSprite.position.copy(player.position);
-    heroSprite.position.y=.09+(playing?Math.sin(elapsed*7)*.017:0);
-    heroSprite.material.rotation=-Math.min(.05,recoil*.9);
+    heroSprite.position.y=.09+heroGaitWeight*Math.abs(Math.sin(heroStride))*.046;
+    heroSprite.material.rotation=-Math.min(.05,recoil*.9)+heroGaitWeight*Math.sin(heroStride)*.024;
     heroSprite.material.color.setHex(flinch>.48?0xffb4a0:0xffffff);
     survivor.visible=maleSurvivor.visible=false;
     if(femaleGlb)femaleGlb.visible=false;
@@ -1624,10 +1624,11 @@ function updateIllustratedActors(lateralVelocity){
   if(paintedMuzzle.visible){
     const [mx,my]=muzzleAnchors[pose]??muzzleAnchors['hero-ready'];
     actorScreenRight.setFromMatrixColumn(camera.matrixWorld,0);
-    actorScreenUp.setFromMatrixColumn(camera.matrixWorld,1);
+    const dx=(mx-.5)*heroSprite.scale.x,dy=(my-.04)*heroSprite.scale.y;
+    const angle=heroSprite.material.rotation;
     paintedMuzzle.position.copy(heroSprite.position)
-      .addScaledVector(actorScreenRight,(mx-.5)*heroSprite.scale.x)
-      .addScaledVector(actorScreenUp,(my-.04)*heroSprite.scale.y);
+      .addScaledVector(actorScreenRight,dx*Math.cos(angle)-dy*Math.sin(angle))
+      .addScaledVector(actorScreenUp,dx*Math.sin(angle)+dy*Math.cos(angle));
     const brightness=muzzleTime/.075;
     paintedMuzzle.material.opacity=Math.min(.98,brightness*1.3);
     paintedMuzzle.material.color.setHex(weapons[weaponIndex].color);
@@ -1639,7 +1640,14 @@ function updateIllustratedActors(lateralVelocity){
 
 function drawIllustratedEnemy(enemy,fallen){
   const data=enemy.userData;
-  const frame=actorFrames[data.illustration];
+  let pose=data.illustration;
+  if(!fallen&&pose==='infected')pose='infected-walk-'+(Math.floor((data.walkDistance??0)*3.2)%4);
+  if(!fallen&&pose==='chief'){
+    if(data.stun>0)pose='chief-stagger';
+    else if(data.windup>0)pose='chief-windup';
+    else if(data.dash>0)pose=Math.floor((data.walkDistance??0)*2)%2?'chief-charge-a':'chief-charge-b';
+  }
+  const frame=actorFrames[pose]??actorFrames[data.illustration];
   if(!frame)return;
   if(!data.artSprite){
     data.artSprite=newPaintedActor();
@@ -1647,13 +1655,20 @@ function drawIllustratedEnemy(enemy,fallen){
   }
   const sprite=data.artSprite;
   const stride=(data.walkDistance??enemy.position.z)*4.8+data.phase;
-  const bossMotion=data.dash>0?1.08:data.windup>0?.85:1;
+  const bossMotion=data.windup>0?.84:data.dash>0?1.025:1;
   applyPaintedFrame(sprite,frame,data.artHeight*bossMotion);
   sprite.position.copy(enemy.position);
   sprite.position.y+=fallen?.34:.06+Math.abs(Math.sin(stride))*.042;
   sprite.center.set(.5,fallen?.5:.04);
   sprite.material.rotation=fallen?-1.49:Math.sin(stride)*.047+(data.dash>0?.09:0);
   sprite.material.color.setHex(fallen?0x957e79:data.flashTime>0?0xffc0a7:0xf6f0ed);
+  if(!fallen&&data.big&&data.label){
+    // Sprite height is screen-aligned, so project the label from the same anchor.
+    healthLabelWorld.copy(sprite.position)
+      .addScaledVector(actorScreenUp,sprite.scale.y*.94+.36);
+    data.label.position.copy(enemy.worldToLocal(healthLabelWorld));
+    data.label.scale.set(1.55/enemy.scale.x,.78/enemy.scale.y,1);
+  }
 }
 const muzzleAnchors={
   'hero-ready':[.966,.798],
