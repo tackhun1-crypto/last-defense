@@ -36,3 +36,9 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Preserved the dusk palette when combat starts. Added a weapon-mounted flash, crates and a drain cover.
 - Automated logic checks passed at 320×960, 390×844, 630×900 and 844×390. Coverage now includes the two extreme player positions, second-pointer handling, weapon purchase, obstacle purchase/activation/expiry, straight projectiles, player damage and inventory restore.
 - JavaScript syntax and the embedded female GLB container passed static checks. Real WebGL rendering, motion, touch feel and performance still need Android testing. The local Chromium process could not start because its required socket was denied.
+
+## Character and enemy art
+
+- Matched the survivor's existing model to the reference's charcoal gear and warm accents. Weapon changes now briefly lower the weapon with the existing survivor animation.
+- Added jointed arms and boots for humanoid enemies. Step animation follows ground distance so limbs stop stepping at barriers. Added a construction helmet and reflective vest accents and refined the police and nurse palettes.
+- Verified humanoid step animation and hit flash material restoration in the four viewport logic checks. Final asset fidelity, in-browser appearance and Android performance remain unverified.

@@ -159,7 +159,7 @@ let recoil=0, flinch=0, swap=0, deploy=0, brace=0, previousVelocity=0;
 function resetCombatMotion(){
   recoil=flinch=swap=deploy=brace=previousVelocity=0;
 }
-// Wave-1 character art pass: lightweight, reversible presentation only.
+// Survivor outline and equipment palette used throughout the run.
 const femaleArtGroup=new THREE.Group();
 player.add(femaleArtGroup);
 const femaleGroundGlow=new THREE.Mesh(
@@ -187,6 +187,12 @@ function updateFemaleArtPass(){
     femaleRimLight.intensity=playing?.72:.4;
   }
 }
+const survivorFabric={
+  '#515b35':0x343d42,
+  '#495333':0x292f36,
+  '#a77c42':0x9d754d,
+  '#efa834':0xd5a357
+};
 let loadingFemale=false;
 async function loadFemale(){
   if(femaleGlb||loadingFemale)return;
@@ -206,6 +212,9 @@ async function loadFemale(){
         const materials=Array.isArray(part.material)?part.material:[part.material];
         for(const m of materials){
           if(m.isMeshStandardMaterial||m.isMeshPhysicalMaterial){
+            if(!m.map&&Object.hasOwn(survivorFabric,m.name)){
+              m.color.setHex(survivorFabric[m.name]);
+            }
             m.roughness=Math.max(.63,m.roughness??.7);
             m.metalness=Math.min(.3,m.metalness??0);
             m.needsUpdate=true;
@@ -280,6 +289,9 @@ function flashHit(enemy) {
   enemy.userData.flashTime = .12;
   if (enemy.userData.originalMaterials) return;
   const meshes = enemy.children.filter(child => child.isMesh);
+  for(const {joint} of enemy.userData.gait??[]){
+    for(const mesh of joint.children)meshes.push(mesh);
+  }
   enemy.userData.originalMaterials = meshes.map(mesh => [mesh, mesh.material]);
   for (const mesh of meshes) mesh.material = hitFlashMaterial;
 }
@@ -315,11 +327,42 @@ const animal=opening?(['dog','bear','tiger'].includes(opening.kind)?opening.kind
 if(animal){makeAnimal(e,animal);return;}
 const role=opening?.kind==="carpenter"?"carpenter":big||ranged||supportX!==null?"": ["police","nurse","carpenter","baby"][spawned%4];
 const body=big?1.7:role==="baby"?.62:role==='carpenter'?1.534:1;
-const uniform={police:0x314d78,nurse:0xe3e1ea,carpenter:0xbb7d38,baby:0x8bbce6}[role];const zombieSkin=mat(chief?0xab6d69:big?0x9b8eac:0x93917e);sphere(.42*body,zombieSkin,0,2.2*body,0,e);box(.85*body,1.05*body,.6*body,mat(big?0x783b5e:ranged?0x8346a4:(uniform??0x76635e)),0,1.5*body,0,e);for(const s of [-1,1]){box(.25*body,.9*body,.3*body,zombieSkin,s*.62*body,1.5*body,-.12,e);box(.28*body,.8*body,.32*body,dark,s*.22*body,.58*body,0,e)}const eyes=mat(0xf5e09a,{emissive:0xe4a330,emissiveIntensity:1});sphere(.07*body,eyes,-.16*body,2.25*body,-.36*body,e);sphere(.07*body,eyes,.16*body,2.25*body,-.36*body,e);if(role==="police"||role==="nurse"){
+const uniform={police:0x283956,nurse:0xc2bfc4,carpenter:0xac6035,baby:0x8596ab}[role];
+const zombieSkin=mat(chief?0xab6d69:big?0x9b8eac:0x93917e);
+const clothing=mat(big?0x783b5e:ranged?0x55426e:(uniform??0x76635e));
+const boots=mat(0x2c2930);
+const head=sphere(.42*body,zombieSkin,0,2.2*body,0,e);
+head.scale.set(.87,1.05,.92);
+const coat=box(.85*body,1.05*body,.6*body,clothing,0,1.5*body,0,e);
+coat.rotation.x=-.12;
+const gait=[];
+for(const side of [-1,1]){
+  const arm=new THREE.Group();
+  arm.position.set(side*.58*body,1.93*body,0);
+  arm.rotation.z=side*.17;
+  e.add(arm);
+  box(.29*body,.4*body,.33*body,clothing,0,-.18*body,.02*body,arm);
+  box(.22*body,.48*body,.25*body,zombieSkin,0,-.57*body,.1*body,arm);
+  const leg=new THREE.Group();
+  leg.position.set(side*.23*body,.98*body,0);
+  e.add(leg);
+  box(.29*body,.8*body,.32*body,dark,0,-.4*body,0,leg);
+  box(.29*body,.18*body,.47*body,boots,0,-.87*body,.075*body,leg);
+  gait.push({joint:arm,amplitude:side*.28,rest:-.31});
+  gait.push({joint:leg,amplitude:-side*.34,rest:0});
+}
+const eyes=mat(0xf5e09a,{emissive:0xe4a330,emissiveIntensity:1});
+if(role==="police"||role==="nurse"){
   box(.62,.16,.53,mat(uniform),0,2.58,0,e);
   box(.52,.07,.29,mat(role==="police"?0x24354c:0xe3e1ea),0,2.52,.29,e);
 }
-if(role==="carpenter")box(.22,1.35,.35,mat(0x92613d),.62,1.45,-.15,e).rotation.z=.28;
+if(role==="carpenter"){
+  const hardHat=mat(0xc39a40);
+  box(.86*body,.09*body,.73*body,hardHat,0,2.46*body,.12*body,e);
+  const crown=sphere(.38*body,hardHat,0,2.51*body,0,e);
+  crown.scale.y=.42;
+  box(.22,1.35,.35,mat(0x92613d),.62,1.45,-.15,e).rotation.z=.28;
+}
 if(role==="baby")sphere(.11,mat(0xefd275),0,1.08,.25,e);
 // Facial recesses and torn cloth remain geometry, independent of collision bounds.
 box(.22*body,.12*body,.035*body,mat(0x39262b),0,2.02*body,.39*body,e);
@@ -340,7 +383,12 @@ if(!big){
     box(.22,.055,.025,marking,0,2.58,.45,e);
     box(.055,.14,.025,marking,0,2.58,.45,e);
   }
-  if(role==="carpenter")box(.62,.13,.52,mat(0x50402d),0,1.58,.10,e);
+  if(role==="carpenter"){
+    const safetyTape=mat(0xd6bb80);
+    for(const side of [-1,1]){
+      box(.085*body,.52*body,.024,safetyTape,side*.23*body,1.59*body,.31*body,e);
+    }
+  }
   if(ranged){
     const violet=mat(0xad5dff,{emissive:0x922fff,emissiveIntensity:1.55});
     const cuff=box(.37,.44,.38,mat(0x413355),.62,1.28,.04,e);
@@ -374,7 +422,7 @@ if(big){
   e.userData.core=core;
 }
 e.scale.setScalar(chief?2.68:big?2.145:1);const health=enemyHealth(big?(chief?480:bossRole?290:180+wave*22):(role==='baby'?27:role==='carpenter'?55:40)+wave*10);
-e.userData={core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};e.userData.label=textSprite(e.userData.hp);e.userData.label.position.set(0,e.userData.labelHeight??(big?4.7:3.15*body),0);e.add(e.userData.label);scene.add(e);enemies.push(e);if(big)updateBossHud()}const animalStats={
+e.userData={gait,walkDistance:0,core:e.userData.core,arrival:chief?1.15:0,hp:health,maxHp:health,speed:enemySpeed((big?1.7:role==='baby'?3.2:role==='carpenter'?2:2.5)+wave*.18),attack:chief?35:big?25:10,big,chief,bossRole,hitRadius:chief?2.9:undefined,runner,ranged,labelHeight:big?4.7:3.15*body,shotCooldown:0,phase:Math.random()*7};e.userData.label=textSprite(e.userData.hp);e.userData.label.position.set(0,e.userData.labelHeight??(big?4.7:3.15*body),0);e.add(e.userData.label);scene.add(e);enemies.push(e);if(big)updateBossHud()}const animalStats={
   dog:{size:.84,hp:24,speed:4.6,color:0xa66d56,attack:10},
   bear:{size:2.145,hp:90,speed:1.65,color:0x655047,attack:16},
   tiger:{size:1.05,hp:48,speed:3.5,color:0xd89145,attack:12}
@@ -1012,6 +1060,12 @@ function updateEnemyAction(enemy,dt){
     if(obstacle.kind==="barrier"&&next===wall.z-.72&&start<=next&&Math.abs(enemy.position.x-wall.x)<1.6)obstacle.active=true;
   }
   enemy.position.z=next;
+  if(data.gait){
+    // Feet and arms pause when a barrier stops the enemy.
+    data.walkDistance+=Math.max(0,next-start);
+    const swing=Math.sin(data.walkDistance*(data.big?1.65:4.9)+data.phase);
+    for(const {joint,amplitude,rest} of data.gait)joint.rotation.x=rest+swing*amplitude;
+  }
 }
 function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);elapsed+=dt;updateHitFlash(player,dt);if(playing){tickObstacles(dt);player.position.x=THREE.MathUtils.damp(player.position.x,targetX,9,dt);player.rotation.z=Math.sin(elapsed*7)*.015;spawnTimer-=dt;if(spawned<toSpawn&&spawnTimer<=0&&(hardMode||wave!==1||enemies.length===0)){makeEnemy();const gap=(!hardMode||wave>=6)?openingWaves[wave]?.[spawned]?.gap:null;spawned++;spawnTimer=wave%5===0&&spawned===toSpawn-1?2:(gap??Math.max(.28,1.15-wave*.04));updateBossHud()}lastShot+=dt;if(lastShot>=fireRate){lastShot=0;fire()}for(const e of enemies.slice()){updateHitFlash(e,dt);updateEnemyAction(e,dt);e.userData.legs?.forEach((leg,i)=>{leg.rotation.x=Math.sin(elapsed*e.userData.speed*3+e.userData.phase)*(i===0||i===3?.42:-.42)});e.rotation.z=Math.sin(elapsed*(e.userData.runner?12:5)+e.userData.phase)*.045;if(e.position.z>4.65){waveStats.baseDamage+=Math.min(hp,e.userData.attack);hp=Math.max(0,hp-e.userData.attack);showHurt('baseStat');effect(160,48,.23,.09);burst(e.position.x,1,4.6,0xff6c6c);removeEnemy(e);updateHUD();if(hp<=0){showPanel('💀 방어선 붕괴',`<b>${wave} 웨이브</b>까지 도전!<br>좀비 ${kills}마리를 처치했습니다.`,defeatOptions());break}}}for(const b of playing?bullets.slice():[]){const previous=b.position.clone();b.position.addScaledVector(b.userData.vel,dt);b.userData.life-=dt;let hit=null;for(const e of enemies){const pos=e.position.clone().add(new THREE.Vector3(0,e.userData.hitHeight??(e.userData.big?3.64:1.65),0));const segment=b.position.clone().sub(previous);const len2=segment.lengthSq();const t=len2?THREE.MathUtils.clamp(pos.clone().sub(previous).dot(segment)/len2,0,1):0;const closest=previous.clone().addScaledVector(segment,t);if(closest.distanceTo(pos)<(e.userData.hitRadius??(e.userData.big?2.379:.85))){hit=e;break}}if(hit) damageEnemy(hit,b.userData.damage,b.position);if(hit||b.userData.life<=0||b.position.z< -90){scene.remove(b);bullets.splice(bullets.indexOf(b),1)}}if(playing)updateHostileShots(dt);if(spawned>=toSpawn&&enemies.length===0&&playing)nextShop()}for(const p of particles.slice()){p.userData.life-=dt;p.position.addScaledVector(p.userData.vel,dt);p.userData.vel.y-=dt*8;p.scale.multiplyScalar(.93);if(p.userData.life<=0){scene.remove(p);particles.splice(particles.indexOf(p),1)}}aimLine.visible=playing;aimLine.position.set(player.position.x+gripOrigin.x,0,player.position.z+gripOrigin.z-.93*gun.scale.z);tail.rotation.z=Math.sin(elapsed*4)*.065+(targetX-player.position.x)*.065;const lateralVelocity=playing?(player.position.x-previousAvatarX)/Math.max(dt,.001):0;
 previousAvatarX=player.position.x;
@@ -1026,7 +1080,7 @@ if(femaleWalk&&femaleGlb.visible){
   const turnTilt=turning?Math.sign(lateralVelocity)*.055:0;
   femaleGlb.rotation.z=avatarLean+turnTilt+flinch*.045;
   femaleGlb.rotation.x=(accelerating?-.035:braking?.035:0)+flinch*.12+deploy*.075+brace*.035;
-  femaleGlb.position.y=Math.sin(elapsed*3)*.012*(1-motionWeight)-brace*.04;
+  femaleGlb.position.y=Math.sin(elapsed*3)*.012*(1-motionWeight)-brace*.04-swap*.035;
   femaleGlb.position.z=-.08+recoil*.55;
   // Carry the visual weapon with the same transform as the survivor.
   femaleGlb.updateMatrix();
@@ -1034,7 +1088,7 @@ if(femaleWalk&&femaleGlb.visible){
   gun.position.copy(gripOrigin).applyMatrix4(gripDelta);
   gripDelta.decompose(gripOffset,gripRotation,gripScale);
   gun.quaternion.copy(gripRotation);
-  gripAngle.set(-recoil*.22,0,0);
+  gripAngle.set(-recoil*.22+swap*.14,0,0);
   gun.quaternion.multiply(gripKick.setFromEuler(gripAngle));
   femaleWalk.setEffectiveWeight(motionWeight);
   femaleWalk.setEffectiveTimeScale(Math.min(1.55,.65+speed*.13));

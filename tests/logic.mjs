@@ -25,7 +25,17 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(avatar,'female');
  reset(); assert.equal(playing,true);assert.equal(wave,1);assert.equal(hp,100);
  makeEnemy(); assert.equal(enemies.length,1);
- const victim=enemies[0]; damageEnemy(victim,999,victim.position);assert.equal(kills,1);assert.equal(coins,8);
+ const victim=enemies[0];
+ const animatedArm=victim.userData.gait[0].joint;
+ const fabric=animatedArm.children[0].material;
+ updateEnemyAction(victim,.2);
+ assert.ok(victim.userData.walkDistance>0);
+ const pose=animatedArm.rotation.x;
+ updateEnemyAction(victim,.2);
+ assert.notEqual(animatedArm.rotation.x,pose);
+ flashHit(victim);assert.equal(animatedArm.children[0].material,hitFlashMaterial);
+ updateHitFlash(victim,.2);assert.equal(animatedArm.children[0].material,fabric);
+ damageEnemy(victim,999,victim.position);assert.equal(kills,1);assert.equal(coins,8);
  nextShop();assert.equal(playing,false);assert.equal($('panel').dataset.screen,'shop');
  coins=1000;showShop();const before=damage;$('choices').children[0].children[1].children[1].onclick();assert.equal(damage,before+12);
  const wallet=coins;
