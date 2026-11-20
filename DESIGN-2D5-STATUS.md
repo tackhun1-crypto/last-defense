@@ -28,3 +28,11 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Verify female GLB animation/weapon alignment, all weapons and items, boss patterns, sound, checkpoint continuation and performance on Android Chrome/Samsung Internet.
 - Particle/mesh disposal and long-session memory performance need profiling; existing resource lifetime behavior was retained.
 - Final deployment requires separate user approval. Do not merge into main or deploy this branch automatically.
+
+## Follow-up on the same branch
+
+- Verified a clipping defect in the original portrait camera with Three.js projection. The camera now maintains a minimum horizontal field of view, blends its angle by aspect ratio, and updates immediately on resize.
+- Dragging tracks one pointer and uses its starting height for horizontal movement. Releasing a second pointer, for example after using an item, leaves the drag active.
+- Preserved the dusk palette when combat starts. Added a weapon-mounted flash, crates and a drain cover.
+- Automated logic checks passed at 320×960, 390×844, 630×900 and 844×390. Coverage now includes the two extreme player positions, second-pointer handling, weapon purchase, obstacle purchase/activation/expiry, straight projectiles, player damage and inventory restore.
+- JavaScript syntax and the embedded female GLB container passed static checks. Real WebGL rendering, motion, touch feel and performance still need Android testing. The local Chromium process could not start because its required socket was denied.
