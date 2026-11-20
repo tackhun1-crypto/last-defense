@@ -86,3 +86,8 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Repainted both survivors' eight combat poses at higher source detail. The production atlases use 512 px square cells, a shared foot-contact baseline, and mipmap filtering for clean edges on phones.
 - Increased the combat presentation size while retaining view margins at the left and right movement limits. Added a warm muzzle-light response on the player's artwork.
 - The character picker previews the actual combat artwork. Gameplay collisions, movement, and weapon timing are kept independent of the art size.
+
+## Original concept survivor
+
+- The default female survivor now uses the outfit and facial direction from the original combat concept. The gray sleeveless top, black shorts, thigh rig, knee guards, goggles and ponytail carry across all eight normal combat and reaction frames.
+- The selector uses the same world artwork, the portrait follows the reference portrait, and the muzzle overlay was recalibrated for the new silhouette.
