@@ -102,3 +102,10 @@ Browser preview reached WebGL initialization error. No actual gameplay or mobile
 - Added separate casual summer and winter outfits for both survivors alongside the tactical and outdoor choices.
 - Outfit previews use the combat art. All eight poses per outfit stay in civilian clothing, and the chosen outfit persists in a saved run.
 - Tests exercise both new choices and avatars, complete frame registration, and restoration through the existing checkpoint flow.
+
+## In-game portraits, weapon art, and street themes
+
+- The combat HUD uses ten portraits mapped to survivor and outfit. Seasonal and civilian portraits are cut from the matching character art, and the male survivor now has a portrait.
+- Weapon-specific painted front assemblies align to the sprite poses and carry the muzzle effect to the visible barrel tip. The weapon art uses the existing weapon slots and stats. Original carbine art remains underneath the attachments.
+- The start menu independently selects dusk, warm summer daylight, or a cool winter evening with instanced snow patches. The street theme is stored in checkpoints while older saves default to dusk.
+- Automated checks cover portrait updates, theme selection and restoration, snow visibility, and weapon assembly and muzzle selection.

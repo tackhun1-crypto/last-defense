@@ -44,8 +44,19 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal($('survivorPortrait').dataset.avatar,'female');
  selectAvatar('male');assert.equal($('survivorPortrait').dataset.avatar,'male');
  selectAvatar('female');
+ applyStreetTheme('winter');
+ assert.equal(streetTheme,'winter');
+ assert.equal(snowDust.visible,true);
+ assert.ok(snowInstances.count>20);
+ assert.equal(sun.color.getHex(),streetPalettes.winter.sun);
+ applyStreetTheme('summer');
+ assert.equal(snowDust.visible,false);
+ assert.equal(streetLamps[0].children[2].intensity,0);
+ applyStreetTheme(undefined);
+ assert.equal(streetTheme,'dusk');
  selectOutfit('summer');
  assert.equal($('avatarChoices').dataset.outfit,'summer');
+ assert.equal($('survivorPortrait').dataset.outfit,'summer');
  assert.equal(outfitAtlases.summer.length,2);
  const firstSummerAtlas=outfitAtlases.summer[0];
  selectOutfit('summer');
@@ -123,7 +134,7 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  $('itemsDialog').close();
  for(let i=0;i<weapons.length;i++){ownedWeapons.add(i);equipWeapon(i);assert.ok(damage>0);assert.ok(fireRate>0);}
- selectOutfit('casual-winter');saveCheckpoint();const cp=loadCheckpoint();assert.ok(cp);assert.equal(cp.wave,1);assert.equal(cp.outfit,'casual-winter');
+ selectOutfit('casual-winter');applyStreetTheme('winter');saveCheckpoint();const cp=loadCheckpoint();assert.ok(cp);assert.equal(cp.wave,1);assert.equal(cp.outfit,'casual-winter');
  for(const number of [5,10]){enemies.slice().forEach(removeEnemy);wave=number;spawned=toSpawn-1;makeEnemy();assert.equal(enemies.filter(e=>e.userData.big).length,number===10?3:1);updateDesignPilot();assert.equal(designPilot.visible,true);
  updateIllustratedActors(0);
  const boss=enemies.find(e=>e.userData.chief)||enemies.find(e=>e.userData.big);
@@ -152,8 +163,8 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  walker.userData.walkDistance=.39;updateIllustratedActors(0);
  assert.equal(walker.userData.artSprite.material.map,actorFrames['infected-walk-1']);
  restoreCheckpoint(cp);
- assert.equal(outfit,'casual-winter');
- selectOutfit('standard');
+ assert.equal(outfit,'casual-winter');assert.equal(streetTheme,'winter');
+ selectOutfit('standard');applyStreetTheme('dusk');
  assert.equal(inventoryItems.barrier,1);assert.equal(inventoryItems.mat,1);
  beginWave();
  for(const kind of ['barrier','mat']){
@@ -187,6 +198,16 @@ for(const [width,height] of [[320,960],[390,844],[630,900],[844,390]]){
  selectAvatar('male');updateIllustratedActors(0);
  assert.equal(heroSprite.material.map,actorFrames['male-fire']);
  selectAvatar('female');
+ for(const index of [1,2,3]){
+   equipWeapon(index);swap=0;
+   muzzleTime=.075;
+   updateIllustratedActors(0,.04);
+   assert.equal(paintedWeapon.visible,true);
+   assert.equal(paintedWeapon.material.map,weaponAppearance[index].art);
+   assert.ok(paintedMuzzle.position.distanceTo(originalMuzzle)>.08);
+ }
+ equipWeapon(0);swap=0;updateIllustratedActors(0);
+ assert.equal(paintedWeapon.visible,false);
  assert.equal(bullets.at(-1).userData.vel.x,0);
  assert.ok(bullets.at(-1).userData.vel.z<0);
  const hit=new THREE.Mesh(new THREE.BoxGeometry(),hostileMaterial);
